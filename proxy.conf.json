@@ -1,0 +1,9 @@
+{
+  "/api": {
+    "target": "http://localhost:3000/api/recipes",
+    "secure": false,
+    "changeOrigin": true,
+    "headers": {"Authorization": "token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1ZDNiNmI4NmE0ZmQ5NDNiNzc3MWQ5YmEifQ.m7wFYRtffwNkRN7WdwBD4AVKorAx87KF2NQeZxhyugA"},
+    "logLevel": "debug"
+  }
+}

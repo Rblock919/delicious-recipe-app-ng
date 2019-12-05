@@ -1,0 +1,41 @@
+// html {
+//   background: url(https://us.123rf.com/450wm/karandaev/karandaev1701/karandaev170100260/69598658-cooking-table-with-herbs-spices-and-utensils-top-view-with-copy-space.jpg?ver=6) no-repeat center center fixed;
+//   -webkit-background-size: cover;
+//   -moz-background-size: cover;
+//   -o-background-size: cover;
+//   background-size: cover;
+// }
+
+.spinner {
+  font-size:300%;
+  position:fixed;
+  top: 50%;
+  left: 50%;
+  z-index:10;
+  color: green;
+}
+
+.fa-spinner {
+    -webkit-animation: spin 1000ms infinite linear;
+    animation: spin 1000ms infinite linear;
+}
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}

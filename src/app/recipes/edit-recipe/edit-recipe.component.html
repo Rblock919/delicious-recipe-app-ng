@@ -1,0 +1,538 @@
+<main role="main">
+
+    <!-- <div class="container" style="padding-bottom: 30px">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="well well-lg">
+            <div class="row">
+              <div class="col-sm-12 text-center">
+               <h1>- {{pageTitle}} -</h1>
+               <h1 *ngIf="recipe">{{recipe.title}}</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+    </div> -->
+
+    <div *ngIf="recipe" class="container">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="card">
+
+            <div class="card-header text-center">
+              <h3 *ngIf="recipe.title">Edit Recipe <br> <span style="font-style: italic">{{recipe.title}}</span></h3>
+              <h3 *ngIf="!recipe.title">Create New Recipe</h3>
+            </div>
+
+            <div class="card-body">
+
+              <form novalidate  (ngSubmit)="saveForm()" [formGroup]="recipeForm">
+
+                <div class="form-group">
+
+                  <div class="row form-row">
+
+                    <div class="col-md-2"></div>
+
+                    <div style="justify-content: center" class="col-md-3 text-center input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Producer:</span>
+                      </div>
+                        <select class="form-control" formControlName="producer" id="producerId"
+                                [ngClass]="{'is-invalid': (recipeForm.get('producer').touched || recipeForm.get('producer').dirty)
+                                                          && !recipeForm.get('producer').valid }" >
+                          <option value="" selected disabled hidden>Select Producer...</option>
+                          <option value="Hello Fresh">Hello Fresh</option>
+                          <option value="Home Chef">Home Chef</option>
+                          <option value="Blue Apron">Blue Apron</option>
+                        </select>
+                      <div *ngIf="recipeForm.get('producer').errors && recipeForm.get('producer').errors['required']" class="invalid-feedback text-center">
+                        <span>
+                          Please select a producer.
+                        </span>
+                      </div>
+                      <div *ngIf="recipeProducer === 'Blue Apron'" class="form-check">
+                        <input (change)="changeBlueApronNutritionalFlag()" [checked]="blueApronNutritionFlag" class="form-check-input" type="checkbox" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck1">
+                          Provides Nutritional Info
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-1"></div>
+
+
+                    <div class="col-md-6 input-group">
+
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Title:</span>
+                      </div>
+                        <input type="text" id="titleId" class="form-control" formControlName="title"
+                               [ngClass]="{'is-invalid': (recipeForm.get('title').touched || recipeForm.get('title').dirty) &&
+                                                          !recipeForm.get('title').valid}" >
+                      <div *ngIf="recipeForm.get('title').errors && recipeForm.get('title').errors['required']" class="invalid-feedback text-center">
+                        <span>
+                          Please enter a title.
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- <div class="col-md-2"></div> -->
+
+                  </div>
+
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-12 text-center">
+                      <h3>Ingredients</h3>
+                    </div>
+                    <br>
+                    <div formArrayName="ingredients" *ngFor="let ingredient of ingredients.controls; let i = index" class="col-md-12">
+                        <div [formGroupName]="i" class="row">
+                          <div class="col-md-2"></div>
+                          <div class="col-md-4 text-right input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Ingredient {{i+1}}: </span>
+                            </div>
+                            <input type="text" class="form-control" formControlName="name" id="{{'ingredient' + i}}" placeholder="Name of Ingredient"
+                                    [ngClass]="{'is-invalid': (ingredients.at(i).get('name').dirty || ingredients.at(i).get('name').touched)
+                                                              && !ingredients.at(i).get('name').valid}">
+                            <div *ngIf="!ingredients.at(i).get('name').valid && ingredients.at(i).get('name').touched" class="invalid-feedback text-center">
+                              <span>
+                                Please enter an ingredient name.
+                              </span>
+                            </div>
+                          </div>
+                          <!-- <div class="col-md-1"></div> -->
+                          <div class="col-md-4 text-center input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Amount: </span>
+                            </div>
+                            <input type="text" class="form-control" formControlName="amount" id="{{'amount' + i}}" placeholder="Amount of Ingredient"
+                                   [ngClass]="{'is-invalid': (ingredients.at(i).get('amount').dirty || ingredients.at(i).get('amount').touched)
+                                                              && !ingredients.at(i).get('amount').valid}">
+                            <!-- <input type="text" class="form-control" formControlName="amountFor2" id="{{'amount' + i}}" placeholder="Amount of Ingredient"
+                                   [ngClass]="{'is-invalid': (ingredients.at(i).get('amountFor2').dirty || ingredients.at(i).get('amountFor2').touched)
+                                                              && !ingredients.at(i).get('amountFor2').valid}">
+                            <input type="text" class="form-control" formControlName="amountFor4" id="{{'amount' + i}}" placeholder="Amount of Ingredient"
+                                   [ngClass]="{'is-invalid': (ingredients.at(i).get('amountFor4').dirty || ingredients.at(i).get('amountFor4').touched)
+                                                              && !ingredients.at(i).get('amountFor4').valid}"> -->
+                            <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeIngredient(i)">X</button>
+                            <div *ngIf="!ingredients.at(i).get('amount').valid && ingredients.at(i).get('amount').touched" class="invalid-feedback text-center">
+                              <span>
+                                Please enter the ingredient amount.
+                              </span>
+                            </div>
+                          </div>
+                          <div class="col-md-2"></div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 text-center">
+                  <button type="button" class="btn btn-outline-success"
+                          (click)="addIngredient()" [disabled]="!ingredients.valid">Add Ingredient</button>
+                </div>
+
+                <hr>
+
+                <div *ngIf="recipeProducer === 'Hello Fresh' || recipeProducer === 'Home Chef'" class="form-group">
+                  <div class="row">
+
+                    <div class="col-md-12 text-center">
+                      <h3>{{preCookTitle}}</h3>
+                    </div>
+
+                    <div formArrayName="preCook" *ngFor="let item of preCook.controls; let i = index" class="col-md-12">
+                      <div [formGroupName]="i" class="row form-row">
+
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">
+                                <span *ngIf="recipeProducer === 'Hello Fresh'">Bust Out #{{i + 1}}:</span>
+                                <span *ngIf="recipeProducer === 'Home Chef'">Step {{i + 1}}:</span>
+                              </span>
+                            </div>
+                            <input class="form-control" type="text" formControlName="body" id="{{'preCook' + i}}"
+                                   [ngClass]="{'is-invalid': (preCook.at(i).get('body').dirty || preCook.at(i).get('body').touched)
+                                                              && !preCook.at(i).get('body').valid}" >
+                            <button type="button" class="btn btn-outline-danger btn-sm" (click)="removePreCook(i)">X</button>
+                            <div *ngIf="!preCook.at(i).get('body').valid && preCook.at(i).get('body').touched" class="invalid-feedback text-center">
+                              <span>
+                                Please enter the pre cooking instruction
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3"></div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div *ngIf="recipeProducer === 'Hello Fresh' || recipeProducer === 'Home Chef'" class="col-md-12 text-center">
+                  <button type="button" [disabled]="!preCook.valid" class="btn btn-outline-success" (click)="addPreCook()">
+                    Add Precook <span *ngIf="recipeProducer === 'Hello Fresh'">Bust Out</span> <span *ngIf="recipeProducer === 'Home Chef'">Instruction</span>
+                  </button>
+                </div>
+
+                <hr *ngIf="recipeProducer === 'Hello Fresh' || recipeProducer === 'Home Chef'">
+
+                <div class="form-group">
+                  <div class="row">
+
+                    <div class="col-md-12 text-center">
+                      <h3>Cooking Steps</h3>
+                    </div>
+
+                    <div formArrayName="steps" *ngFor="let step of steps.controls; let i = index" class="col-md-12">
+                      <div [formGroupName]="i" class="row form-row">
+
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Step {{i+1}} Name:</span>
+                            </div>
+                            <input class="form-control" type="text" formControlName="name" id="{{'stepname' + i}}"
+                                   [ngClass]="{'is-invalid': (steps.at(i).get('name').dirty || steps.at(i).get('name').touched)
+                                                              && !steps.at(i).get('name').valid}" >
+                            <div *ngIf="!steps.at(i).get('name').valid && steps.at(i).get('name').touched" class="invalid-feedback text-center">
+                              <span>
+                                Please enter a step name.
+                              </span>
+                            </div>
+                          </div>
+                          <!-- <label for="{{'stepname' + i}}">Step {{i+1}} Name:</label> -->
+                        </div>
+                        <div class="col-md-3">
+                          <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeStep(i)">Remove Step {{i+1}}</button>
+                        </div>
+
+                        <div class="col-md-12">
+                          <!-- <label for="{{'stepbody' + i}}">Step {{i+1}} instructions:</label><br> -->
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Instructions:</span>
+                            </div>
+                            <textarea rows="2" class="form-control"
+                                    formControlName="body" id="{{'stepbody' + i}}" placeholder="enter step {{i+1}} instructions here..."
+                                    [ngClass]="{'is-invalid': (steps.at(i).get('body').dirty || steps.at(i).get('body').touched)
+                                                              && !steps.at(i).get('body').valid}" ></textarea>
+                            <div *ngIf="!steps.at(i).get('body').valid && steps.at(i).get('body').touched" class="invalid-feedback text-center">
+                              <span>
+                                Please enter a step description.
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                      <br>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="col-md-12 text-center">
+                  <button type="button" [disabled]="!steps.valid" class="btn btn-outline-success" (click)="addStep()">Add Step</button>
+                </div>
+
+                <hr>
+
+                <div class="col-md-12 text-center">
+                   <h3>Nurtitional Information</h3>
+                </div>
+
+                <div formGroupName="nutrition">
+                <!-- <div class="row"> -->
+
+                  <div class="form-group">
+                    <div class="form-row">
+
+                      <div *ngIf="recipeProducer !== 'Home Chef' && recipeProducer !== 'Hello Fresh' && (!recipeProducer || (recipeProducer === 'Blue Apron' && !blueApronNutritionFlag))"
+                          class="col-md-4"></div>
+                      <div [ngClass]="{'col-md-3': (recipeProducer === 'Home Chef' || recipeProducer === 'Hello Fresh' ||
+                                      (recipeProducer === 'Blue Apron' && blueApronNutritionFlag)),
+                                       'col-md-4': (!recipeProducer || (recipeProducer === 'Blue Apron' && blueApronNutritionFlag === false))}"
+                            class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Calories:</span>
+                        </div>
+                        <input formControlName="calories" type="text" id="caloriesId" class="form-control"
+                               [ngClass]="{'is-invalid': (recipeForm.get('nutrition.calories').dirty || recipeForm.get('nutrition.calories').touched)
+                                                          && !recipeForm.get('nutrition.calories').valid}" >
+                        <div *ngIf="recipeForm.get('nutrition.calories').errors &&
+                                    recipeForm.get('nutrition.calories').errors['required']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a calorie amount.
+                          </span>
+                        </div>
+                        <div *ngIf="recipeForm.get('nutrition.calories').errors &&
+                                    recipeForm.get('nutrition.calories').errors['numberType']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a number.
+                          </span>
+                        </div>
+                      </div>
+                      <div *ngIf="recipeProducer !== 'Home Chef' && recipeProducer !== 'Hello Fresh' && (recipeProducer === 'Blue Apron' && !blueApronNutritionFlag)"
+                            class="col-md-4"></div>
+
+                      <div *ngIf="recipeProducer === 'Home Chef' || recipeProducer === 'Hello Fresh' || (recipeProducer === 'Blue Apron' && blueApronNutritionFlag)"
+                          class="col-md-3 input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Fat:</span>
+                        </div>
+                        <input formControlName="fat" type="text" id="fatId" class="form-control"
+                               [ngClass]="{'is-invalid': (recipeForm.get('nutrition.fat').dirty || recipeForm.get('nutrition.fat').touched)
+                                                          && !recipeForm.get('nutrition.fat').valid}" >
+                        <div *ngIf="recipeForm.get('nutrition.fat').errors &&
+                                    recipeForm.get('nutrition.fat').errors['required']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a fats amount.
+                          </span>
+                        </div>
+                        <div *ngIf="recipeForm.get('nutrition.fat').errors &&
+                                    recipeForm.get('nutrition.fat').errors['numberType']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a number.
+                          </span>
+                        </div>
+                      </div>
+                      <div *ngIf="recipeProducer === 'Home Chef' || recipeProducer === 'Hello Fresh' || (recipeProducer === 'Blue Apron' && blueApronNutritionFlag)"
+                          class="col-md-3 input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Carbs:</span>
+                        </div>
+                        <input formControlName="carbohydrate" type="text" id="carbsId" class="form-control"
+                               [ngClass]="{'is-invalid': (recipeForm.get('nutrition.carbohydrate').dirty || recipeForm.get('nutrition.carbohydrate').touched)
+                                                          && !recipeForm.get('nutrition.carbohydrate').valid}" >
+                        <div *ngIf="recipeForm.get('nutrition.carbohydrate').errors &&
+                                    recipeForm.get('nutrition.carbohydrate').errors['required']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a carbs amount.
+                          </span>
+                        </div>
+                        <div *ngIf="recipeForm.get('nutrition.carbohydrate').errors &&
+                                    recipeForm.get('nutrition.carbohydrate').errors['numberType']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a number.
+                          </span>
+                        </div>
+                      </div>
+                      <div *ngIf="recipeProducer === 'Home Chef' || recipeProducer === 'Hello Fresh' || (recipeProducer === 'Blue Apron' && blueApronNutritionFlag)"
+                          class="col-md-3 input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Protein:</span>
+                        </div>
+                        <input formControlName="protein" type="text" id="proteinId" class="form-control"
+                               [ngClass]="{'is-invalid': (recipeForm.get('nutrition.protein').dirty || recipeForm.get('nutrition.protein').touched)
+                                                          && !recipeForm.get('nutrition.protein').valid}" >
+                        <div *ngIf="recipeForm.get('nutrition.protein').errors &&
+                                    recipeForm.get('nutrition.protein').errors['required']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a protein amount.
+                          </span>
+                        </div>
+                        <div *ngIf="recipeForm.get('nutrition.protein').errors &&
+                                    recipeForm.get('nutrition.protein').errors['numberType']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a number.
+                          </span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div *ngIf="recipeProducer === 'Hello Fresh' || (recipeProducer === 'Blue Apron' && blueApronNutritionFlag)" class="form-group">
+                    <div class="form-row">
+
+                      <div class="col-md-3 input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Sugar:</span>
+                        </div>
+                        <input formControlName="sugar" type="text" id="sugarId" class="form-control"
+                               [ngClass]="{'is-invalid': (recipeForm.get('nutrition.sugar').dirty || recipeForm.get('nutrition.sugar').touched)
+                                                          && !recipeForm.get('nutrition.sugar').valid}" >
+                        <div *ngIf="recipeForm.get('nutrition.sugar').errors &&
+                                    recipeForm.get('nutrition.sugar').errors['required']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a sugar amount.
+                          </span>
+                        </div>
+                        <div *ngIf="recipeForm.get('nutrition.sugar').errors &&
+                                    recipeForm.get('nutrition.sugar').errors['numberType']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a number.
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-3 input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Saturated Fat:</span>
+                        </div>
+                        <input formControlName="saturatedFat" type="text" id="satfatId" class="form-control"
+                               [ngClass]="{'is-invalid': (recipeForm.get('nutrition.saturatedFat').dirty || recipeForm.get('nutrition.saturatedFat').touched)
+                                                          && !recipeForm.get('nutrition.saturatedFat').valid}" >
+                        <div *ngIf="recipeForm.get('nutrition.saturatedFat').errors &&
+                                    recipeForm.get('nutrition.saturatedFat').errors['required']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a saturated fats amount.
+                          </span>
+                        </div>
+                        <div *ngIf="recipeForm.get('nutrition.saturatedFat').errors &&
+                                    recipeForm.get('nutrition.saturatedFat').errors['numberType']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a number.
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-3 input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Cholesterol:</span>
+                        </div>
+                        <input formControlName="cholesterol" type="text" id="cholId" class="form-control"
+                               [ngClass]="{'is-invalid': (recipeForm.get('nutrition.cholesterol').dirty || recipeForm.get('nutrition.cholesterol').touched)
+                                                          && !recipeForm.get('nutrition.cholesterol').valid}" >
+                        <div *ngIf="recipeForm.get('nutrition.cholesterol').errors &&
+                                    recipeForm.get('nutrition.cholesterol').errors['required']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a cholesterol amount.
+                          </span>
+                        </div>
+                        <div *ngIf="recipeForm.get('nutrition.cholesterol').errors &&
+                                    recipeForm.get('nutrition.cholesterol').errors['numberType']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a number.
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-3 input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Fiber:</span>
+                        </div>
+                        <input formControlName="fiber" type="text" id="fiberId" class="form-control"
+                               [ngClass]="{'is-invalid': (recipeForm.get('nutrition.fiber').dirty || recipeForm.get('nutrition.fiber').touched)
+                                                          && !recipeForm.get('nutrition.fiber').valid}" >
+                        <div *ngIf="recipeForm.get('nutrition.fiber').errors &&
+                                    recipeForm.get('nutrition.fiber').errors['required']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a fiber amount.
+                          </span>
+                        </div>
+                        <div *ngIf="recipeForm.get('nutrition.fiber').errors &&
+                                    recipeForm.get('nutrition.fiber').errors['numberType']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a number.
+                          </span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div *ngIf="recipeProducer === 'Home Chef' || recipeProducer === 'Hello Fresh' || (recipeProducer === 'Blue Apron' && blueApronNutritionFlag)"
+                        class="form-group">
+                    <div class="row form-row">
+
+                      <div class="col-md-4"></div>
+                      <div class="col-md-3 input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Sodium:</span>
+                        </div>
+                        <input formControlName="sodium" type="text" id="sodiumId" class="form-control"
+                               [ngClass]="{'is-invalid': (recipeForm.get('nutrition.sodium').dirty || recipeForm.get('nutrition.sodium').touched)
+                                                          && !recipeForm.get('nutrition.sodium').valid}" >
+                        <div *ngIf="recipeForm.get('nutrition.sodium').errors &&
+                                    recipeForm.get('nutrition.sodium').errors['required']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a sodium amount.
+                          </span>
+                        </div>
+                        <div *ngIf="recipeForm.get('nutrition.sodium').errors &&
+                                    recipeForm.get('nutrition.sodium').errors['numberType']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter a number.
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-5"></div>
+
+                    </div>
+                  </div>
+
+              </div> <!-- end of nutrition form group div -->
+
+                  <hr>
+                  <div class="form-group">
+                    <div class="row form-row">
+
+                      <div class="col-md-12 text-center">
+                        <h3>Image URL</h3>
+                      </div>
+
+                      <div class="col-md-12 input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Image URL:</span>
+                        </div>
+                        <input style="text-align: left !important" formControlName="imgDir" type="text" id="imgId" class="form-control"
+                               [ngClass]="{'is-invalid': (recipeForm.get('imgDir').dirty || recipeForm.get('imgDir').touched)
+                                                          && !recipeForm.get('imgDir').valid}" >
+                        <div *ngIf="recipeForm.get('imgDir').errors &&
+                                    recipeForm.get('imgDir').errors['required']" class="invalid-feedback text-center">
+                          <span>
+                            Please enter an image URL.
+                          </span>
+                        </div>
+                      </div>
+                      <br>
+                      <div class="col-md-12">
+                        <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4 text-center">
+                          <label *ngIf="imageDir" style="font-style: italic" for="imageId">Image Preview</label>
+                          <img *ngIf="imageDir" style="width: 100%" id="imageId" src="{{imageDir}}">
+                        </div>
+                        <div class="col-md-4"></div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                <!-- </div> -->
+
+                <!-- <div class="form-group">
+                  <br>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div> -->
+              </form>
+
+            </div><!-- end of card body -->
+            <div class="card-footer text-right">
+              Form Valid: {{recipeForm.valid}}
+              <button *ngIf="recipe.title" type="button"
+                      class="btn btn-primary" (click)="saveForm()">Save Changes</button>
+              <button *ngIf="!recipe.title" type="button"
+                      class="btn btn-primary" (click)="saveForm()">Create</button>
+            </div>
+          </div> <!-- end of card -->
+
+        </div> <!-- end of first col-md-12 -->
+      </div> <!-- end of first row -->
+    </div> <!-- end of container -->
+
+</main>

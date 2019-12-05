@@ -1,0 +1,113 @@
+<main role="main">
+
+  <div class="container" style="padding-bottom: 30px">
+    <div class="row heading">
+      <div class="col-md-12">
+        <div class="well well-lg">
+          <div class="row">
+            <div class="col-sm-12 text-center">
+             <h1>All Recipes</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+  <div class="row">
+      <div class="col-md-4 text-center">
+        <p>Sort By:</p>
+        <div class="btn-toolbar" role="toolbar" aria-label="btn toolbar">
+          <div class="btn-group" role="group" aria-label="First group">
+            <button type="button" class="btn" (click)="setSortFilter('rating')"
+                    [ngClass]="{'btn-dark': sortFilter !== 'rating', 'btn-light': sortFilter === 'rating'}" >
+              Rating&nbsp;<i *ngIf="sortFilter === 'rating'" class="fa"
+                          [ngClass]="{'fa-sort-asc': sortDirection === 'up', 'fa-sort-desc': sortDirection === 'down'}"></i>
+            </button>
+            <button type="button" class="btn btn-dark" (click)="setSortFilter('calories')"
+                    [ngClass]="{'btn-dark': sortFilter !== 'calories', 'btn-light': sortFilter === 'calories'}">
+              Calories&nbsp;<i *ngIf="sortFilter === 'calories'" class="fa"
+                          [ngClass]="{'fa-sort-asc': sortDirection === 'up', 'fa-sort-desc': sortDirection === 'down'}"></i>
+            </button>
+            <button type="button" class="btn btn-dark" (click)="setSortFilter('title')"
+                    [ngClass]="{'btn-dark': sortFilter !== 'title', 'btn-light': sortFilter === 'title'}" >
+              Title&nbsp;<i *ngIf="sortFilter === 'title'" class="fa"
+                       [ngClass]="{'fa-sort-asc': sortDirection === 'up', 'fa-sort-desc': sortDirection === 'down'}"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4"></div>
+      <div class="col-md-4 text-center">
+        <p>Filter By:</p>
+        <div class="btn-toolbar" role="toolbar" aria-label="btn toolbar">
+          <div class="btn-group" role="group" aria-label="First group">
+            <button type="button" class="btn" (click)="setTopFilter('new')"
+                    [ngClass]="{'btn-dark': topSelectedFilter !== 'new', 'btn-light': topSelectedFilter === 'new'}" >New</button>
+            <button type="button" class="btn btn-dark" (click)="setTopFilter('hot')"
+                    [ngClass]="{'btn-dark': topSelectedFilter !== 'hot', 'btn-light': topSelectedFilter === 'hot'}" >Hot</button>
+            <button type="button" class="btn btn-dark" (click)="setTopFilter('fav')"
+                    [ngClass]="{'btn-dark': topSelectedFilter !== 'fav', 'btn-light': topSelectedFilter === 'fav'}" >Fav</button>
+          </div>
+          <div class="btn-group" role="group" aria-label="Second group">
+            <button type="button" class="btn" (click)="setBotFilter('Hello Fresh')"
+                    [ngClass]="{'btn-dark': botSelectedFilter !== 'Hello Fresh', 'btn-light': botSelectedFilter === 'Hello Fresh'}" >Hello Fresh</button>
+            <button type="button" class="btn btn-dark" (click)="setBotFilter('Home Chef')"
+                    [ngClass]="{'btn-dark': botSelectedFilter !== 'Home Chef', 'btn-light': botSelectedFilter === 'Home Chef'}" >Home Chef</button>
+            <button type="button" class="btn btn-dark" (click)="setBotFilter('Blue Apron')"
+                    [ngClass]="{'btn-dark': botSelectedFilter !== 'Blue Apron', 'btn-light': botSelectedFilter === 'Blue Apron'}" >Blue Apron</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel">
+          <div class="panel-body">
+
+            <div class="marketing">
+              <div class="row"  style="text-align: center; align-content: center" >
+                <div *ngFor="let recipe of recipeList | filterBy:topSelectedFilter:botSelectedFilter:userId | orderBy:sortFilter:sortDirection " class="col-md-4" style="padding-top: 20px">
+                  <app-recipe (rateEvent)="triggerRate($event)" (favoriteEvent)="favEvent($event)" [userId]="userId" [recipe]="recipe" [userRating]="recipe.raters[userId]"></app-recipe>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div style="justify-content: center" class="modal fade" id="C580" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h5 class="modal-title" id="exampleModalLabel"><span style="font-style: italic; padding-left: 10px">{{selectedRecipe.title}}</span></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+            <span (click)="setRating(1)" [ngClass]="{'fa-star': userRating > 0, 'fa-star-o': userRating < 1}" class="fa"></span>
+            <span (click)="setRating(2)" [ngClass]="{'fa-star': userRating > 1, 'fa-star-o': userRating < 2}" class="fa"></span>
+            <span (click)="setRating(3)" [ngClass]="{'fa-star': userRating > 2, 'fa-star-o': userRating < 3}" class="fa"></span>
+            <span (click)="setRating(4)" [ngClass]="{'fa-star': userRating > 3, 'fa-star-o': userRating < 4}" class="fa"></span>
+            <span (click)="setRating(5)" [ngClass]="{'fa-star': userRating > 4, 'fa-star-o': userRating < 5}" class="fa"></span>
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+            <button type="button" (click)="submitRate()" data-dismiss="modal" class="btn btn-primary">
+              <span *ngIf="!rated" >Rate!</span>
+              <span *ngIf="rated" >Change Rate!</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>

@@ -1,0 +1,60 @@
+.card-img-top {
+  width: 100%;
+  height: 233px;
+  object-fit: cover;
+}
+
+.card {
+  background-color: #343a40;
+  height: 100%;
+}
+
+.img-thumbnail {
+  border: 1px solid #343a40;
+}
+
+.favoritingIcon {
+  padding-left: 25px;
+  padding-top: 7px;
+}
+
+.badge-hf {
+  // background-color: #5a9d3a !important;
+  background-color: #0cd157 !important;
+}
+
+.badge-hc {
+  background-color: #319b42 !important;
+}
+
+.fa-heart-o, .fa-heart {
+  color: red;
+}
+
+.fa-star, .fa-star-o {
+  color: gold;
+}
+
+// .rating {
+  // unicode-bidi: bidi-override;
+  // direction: rtl;
+  // text-align: center;
+// }
+// .rating > span {
+  // display: inline-block;
+  // position: relative;
+  // width: 1.1em;
+// }
+// .rating > span:hover:before,
+// .rating > span:hover ~ span:before {
+   // content: "\2605";
+   // color: gold;
+   // position: absolute;
+// }
+
+// .inRating {
+  // content: "\2605";
+  // left: 0;
+  // //color: gold;
+  // position: absolute;
+// }

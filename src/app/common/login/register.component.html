@@ -1,0 +1,54 @@
+<main role="main">
+
+<div class="container" style="padding-bottom: 30px">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="well well-lg">
+        <div class="row">
+          <div class="col-sm-12 text-center">
+           <h1>Create an Account</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <form #signUpForm="ngForm">
+        <div class="form-group">
+          <div *ngIf="message" class="alert alert-danger alert-dismissible fade show">
+              <span style="padding-left: 45px">{{message}}</span>
+              <button type="button" class="close" (click)="clearMessage()" data-dismiss="alert">&times;</button>
+          </div>
+          <div *ngIf="passwordMessage" class="alert alert-danger alert-dismissible fade show">
+              <span style="padding-left: 45px">{{passwordMessage}}</span>
+              <button type="button" class="close" (click)="clearMessage()" data-dismiss="alert">&times;</button>
+          </div>
+
+          <label for="username">Username</label>
+          <input style="width: 100%" class="form-control" [(ngModel)]="userInfo.username"
+                type="text" name="username" id="username" #usernameField="ngModel">
+          <br>
+          <label for="password">Password</label>
+          <input style="width: 100%" class="form-control" [(ngModel)]="userInfo.password"
+                type="password" name="password" id="password" #passwordField="ngModel">
+          <br>
+
+          <label for="confirmPassword">Confirm Password</label>
+          <input style="width: 100%" class="form-control" [(ngModel)]="confirmPassword"
+                type="password" name="confirmPassword" id="confirmPassword" #confirmPasswordField="ngModel">
+          <br>
+
+          <button [disabled]="!(passwordField.value && usernameField.value)" class="btn btn-outline-primary" (click)="register()">Sign Up</button>
+          <!-- <button (click)="register()">Sign up</button> -->
+        </div>
+      </form>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+</div>
+
+</main>

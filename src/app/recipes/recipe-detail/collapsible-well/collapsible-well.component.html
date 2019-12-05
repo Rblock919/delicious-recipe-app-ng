@@ -1,0 +1,12 @@
+<div class="well card">
+  <div class="card-header text-center">
+      <span (click)="toggleContent()" class="pointable pull-left fa fa-xs"
+      [ngClass]="{'fa-minus': visible, 'fa-plus': !visible}" aria-hidden="true"></span>
+    <h4>
+      <ng-content select="[well-title]"></ng-content>
+    </h4>
+  </div>
+  <div *ngIf="visible" class="card-body">
+    <ng-content select="[well-body]"></ng-content>
+  </div>
+</div>

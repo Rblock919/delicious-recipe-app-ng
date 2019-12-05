@@ -1,0 +1,38 @@
+img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.ing-text {
+  font-size: 18px;
+}
+
+small {
+  font-style: italic;
+}
+
+.list-group-item:after {
+  // content: "";
+  // display: block;
+  // margin: 0 auto;
+  // width: 100%;
+  border: 0px !important;
+}
+
+.badge-hf {
+  // background-color: #5a9d3a !important;
+  background-color: #0cd157 !important;
+}
+
+.badge-hc {
+  background-color: #319b42 !important;
+}
+
+.fa-heart-o, .fa-heart {
+  color: red;
+}
+
+.fa-star, .fa-star-o {
+  color: gold;
+}

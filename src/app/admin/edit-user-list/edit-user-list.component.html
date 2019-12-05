@@ -1,0 +1,45 @@
+<main role="main">
+
+  <div class="container" style="padding-bottom: 30px">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="well well-lg">
+            <div class="row">
+              <div class="col-sm-12 text-center">
+               <h1>Edit Users</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+
+    <!-- <div class="row"> -->
+      <div *ngFor="let user of userList; let i = index" class="row text-center">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+          <div class="custom-control custom-switch">
+            <span class="pull-left">User: &nbsp; <span style="font-style: italic">{{user.username}}</span></span>
+            <span class="pull-right">
+              <input type="checkbox" (click)="changeStatus(user)" [checked]="user.isAdmin" class="custom-control-input" [id]="user._id">
+              <label class="custom-control-label" [for]="user._id">Admin</label>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-3"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+          <hr>
+          <button (click)="submit()" [disabled]="!differentFromOriginal" class="btn btn-primary pull-right">
+            Save Changes
+          </button>
+        </div>
+        <div class="col-md-3"></div>
+      </div>
+    <!-- </div> -->
+
+  </div>
+
+</main>

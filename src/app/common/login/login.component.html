@@ -1,0 +1,48 @@
+<main role="main">
+
+  <div class="container" style="padding-bottom: 30px">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="well well-lg">
+            <div class="row">
+              <div class="col-sm-12 text-center">
+               <h1>Sign In</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+    <div class="row">
+<div class="col-md-4"></div>
+<div class="col-md-4">
+  <form #signInForm="ngForm">
+    <div class="form-group">
+      <!-- <div *ngIf="message" class="alert alert-danger"> -->
+        <div *ngIf="message" class="alert alert-danger alert-dismissible fade show">
+            <span style="padding-left: 45px">{{message}}</span>
+            <button type="button" class="close" (click)="clearMessage()" data-dismiss="alert">&times;</button>
+        </div>
+        <!-- <em>{{message}}</em> -->
+      <!-- </div> -->
+      <label for="username">Username</label>
+      <input style="width: 100%" class="form-control" [(ngModel)]="userInfo.username"
+             type="text" name="username" id="username" #usernameField="ngModel">
+      <br>
+      <label for="password">Password</label>
+      <input style="width: 100%" class="form-control" [(ngModel)]="userInfo.password"
+             type="password" name="password" id="password" #passwordField="ngModel">
+      <br>
+      <p class="register-text">Don't have an account?
+        <a routerLink="/register">Register Here</a>
+      </p>
+      <button [disabled]="!(passwordField.value && usernameField.value)" class="btn btn-outline-primary" (click)="login()">Login</button>
+    </div>
+  </form>
+</div>
+<div class="col-md-4"></div>
+</div>
+</div>
+
+
+</main>

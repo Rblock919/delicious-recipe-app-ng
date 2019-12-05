@@ -1,0 +1,107 @@
+<main role="main">
+
+    <div class="text-center">
+      <h2>Welcome to my Recipe Repository Application!</h2>
+    </div>
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1"></li>
+          <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img"><rect width="100%" height="100%" fill="#343a40"/></svg>
+            <div class="container">
+              <div class="carousel-caption">
+                <h1>Tons O' Recipes.</h1>
+                <p>This is filler text for now. I still need to find a good use for this page for a logged in user.</p>
+                <p><a class="btn btn-lg btn-primary" href="#" role="button">Filler Button</a></p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img"><rect width="100%" height="100%" fill="#343a40"/></svg>
+            <div class="container">
+              <div class="carousel-caption">
+                <h1>Have a few recipes that you especially like?</h1>
+                <p>Click the heart button next to a recipe to favorite it and add it to your personalized favorited list!</p>
+                <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img"><rect width="100%" height="100%" fill="#343a40"/></svg>
+            <div class="container">
+              <div class="carousel-caption">
+                <h1>Want to let others know about your favorite recipes?</h1>
+                <p>Click on one of the 5 stars next to a recipe to rate it accordingly. Then all users can sort recipes based upon the highest rated!</p>
+                <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+
+  <!-- <div class="container" style="padding-bottom: 30px">
+    <div class="row">
+
+      <div class="col-md-12">
+        <div class="well well-lg">
+          <div class="row">
+            <div class="col-sm-12 text-center">
+             <h1>{{pageTitle}}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <div class="btn-toolbar" role="toolbar" aria-label="btn toolbar">
+          <div class="btn-group btn-group-lg" role="group" aria-label="First group">
+            <button type="button" class="btn" (click)="setFilter('new')"
+                    [ngClass]="{'btn-dark': selectedFilter !== 'new', 'btn-light': selectedFilter === 'new'}" >New</button>
+            <button type="button" class="btn btn-dark" (click)="setFilter('hot')"
+                    [ngClass]="{'btn-dark': selectedFilter !== 'hot', 'btn-light': selectedFilter === 'hot'}" >Hot</button>
+            <button type="button" class="btn btn-dark" (click)="setFilter('fav')"
+                    [ngClass]="{'btn-dark': selectedFilter !== 'fav', 'btn-light': selectedFilter === 'fav'}" >Fav</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel">
+          <div class="panel-body">
+
+            <div class="marketing">
+              <div class="row"  style="text-align: center; align-content: center" >
+                <div *ngFor="let recipe of selectedRecipeList" class="col-lg-4" style="padding-top: 20px">
+                  <app-recipe (favoriteEvent)="favEvent()" [userId]="userId" [recipe]="recipe"></app-recipe>
+                </div>
+                </div><!-- /.row -->
+            <!-- </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  -->
+
+</main>

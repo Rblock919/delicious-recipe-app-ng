@@ -1,0 +1,77 @@
+<div class="card" style="width: 100%;">
+  <img class="card-img-top img-thumbnail" src="{{recipe.imgDir}}">
+  <div class="card-body">
+    <h5 style="color: white" class="card-title">{{recipe.title}}</h5>
+    <!-- <p class="card-text">Some quick example text to build on the card title & the card's content.</p> -->
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <p style="font-size: 13px; color: white">Calories: {{recipe.nutritionValues.calories}}</p>
+        <p><span [ngClass]="{'badge-hf': recipe.producer === 'Hello Fresh',
+                             'badge-hc': recipe.producer === 'Home Chef',
+                             'badge-success': (recipe.producer === 'Hello Fresh' || recipe.producer === 'Home Chef'),
+                             'badge-primary': recipe.producer === 'Blue Apron'}"
+            class="badge badge-pill">{{recipe.producer}}</span></p>
+      </div>
+      <div class="col-md-3"></div>
+    <!-- </div> -->
+
+    <!-- <div class="row"> -->
+      <div class="col-md-3">
+        <div class="favoritingIcon pointable">
+              <i class="fa" aria-hidden="true" (click)="favorite()"
+              [ngClass]="{'fa-heart': favorited, 'fa-heart-o': !favorited}"></i>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <a [routerLink]="['/recipe', recipe._id]" class="btn btn-info">View Recipe &raquo;</a>
+      </div>
+      <div class="col-md-3">
+        <!-- Overall -->
+        <div style="padding-top: 6px; margin-left: -18px">
+          <app-star [rating]="avgRating"></app-star>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 text-center">
+      </div>
+      <div style="justify-content: center; margin-top: 6px" class="col-md-4 text-center">
+        <button type="button" [id]="recipe._id" (click)="triggerRate()" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#C580">
+          <span style="color: white;">Rate</span>
+        </button>
+      </div>
+      <div class="col-md-4 text-center">
+      </div>
+    </div>
+
+      <!-- Modal -->
+<!--      <div style="justify-content: center" class="modal fade" [id]="modalContentID" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--        <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--          <div class="modal-content">-->
+<!--            <div class="modal-header text-center">-->
+<!--              <h5 class="modal-title" id="exampleModalLabel"><span style="font-style: italic; padding-left: 10px">{{recipe.title}}</span></h5>-->
+<!--              <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                <span aria-hidden="true">&times;</span>-->
+<!--              </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body text-center">-->
+<!--              <span (click)="setRating(1)" [ngClass]="{'fa-star': userRating > 0, 'fa-star-o': userRating < 1}" class="fa"></span>-->
+<!--              <span (click)="setRating(2)" [ngClass]="{'fa-star': userRating > 1, 'fa-star-o': userRating < 2}" class="fa"></span>-->
+<!--              <span (click)="setRating(3)" [ngClass]="{'fa-star': userRating > 2, 'fa-star-o': userRating < 3}" class="fa"></span>-->
+<!--              <span (click)="setRating(4)" [ngClass]="{'fa-star': userRating > 3, 'fa-star-o': userRating < 4}" class="fa"></span>-->
+<!--              <span (click)="setRating(5)" [ngClass]="{'fa-star': userRating > 4, 'fa-star-o': userRating < 5}" class="fa"></span>-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--              &lt;!&ndash; <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> &ndash;&gt;-->
+<!--              <button type="button" (click)="submitRate()" data-dismiss="modal" class="btn btn-primary">-->
+<!--                <span *ngIf="!rated" >Rate!</span>-->
+<!--                <span *ngIf="rated" >Change Rate!</span>-->
+<!--              </button>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+  </div>
+</div>
