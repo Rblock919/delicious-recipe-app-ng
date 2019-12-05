@@ -2,14 +2,14 @@ import { Injectable, Component } from '@angular/core';
 import { CanActivate, Router, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { SessionService } from '../session.service';
+import { SessionService } from '../services/session.service';
 import { EditRecipeComponent } from '../../recipes/edit-recipe/edit-recipe.component';
-import { RegisterComponent } from '../../common/login/register.component';
-import { LoggerService } from '../util/logger.service';
+import { RegisterComponent } from '../../public/login/register.component';
+import { LoggerService } from '../services/logger.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable(
+  // { providedIn: 'root' }
+)
 export class RouteGuard implements CanActivate, CanDeactivate<Component> {
 
   constructor(

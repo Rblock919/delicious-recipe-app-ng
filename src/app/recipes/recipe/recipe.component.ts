@@ -7,7 +7,7 @@ import {
   Output
 } from '@angular/core';
 
-import { JQ_TOKEN } from '../../shared/jQuery.service';
+import { JQ_TOKEN } from '../../core/services/jQuery.service';
 import { IRecipe } from 'src/app/models/recipe.model';
 
 @Component({

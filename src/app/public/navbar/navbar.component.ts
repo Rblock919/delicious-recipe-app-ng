@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from 'src/app/services/api/auth.service';
-import { TOASTR_TOKEN, Toastr} from '../shared/toastr.service';
-import { SessionService } from '../services/session.service';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { TOASTR_TOKEN, Toastr} from '../../core/services/toastr.service';
+import { SessionService } from '../../core/services/session.service';
 
 @Component({
   selector: 'app-navbar',

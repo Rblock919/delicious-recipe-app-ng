@@ -1,7 +1,7 @@
 export interface IUser {
   _id: number;
   username: string;
-  password: string;
+  password?: string;
   isAdmin: boolean;
 }
 
@@ -14,3 +14,4 @@ export interface IUsersResolved {
   users: IUser[];
   error?: any;
 }
+

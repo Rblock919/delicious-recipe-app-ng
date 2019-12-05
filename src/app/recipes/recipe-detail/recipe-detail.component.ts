@@ -2,10 +2,10 @@ import {Component, Inject, OnInit, SecurityContext} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
 
-import {RecipeApiService} from 'src/app/services/api/recipe-api.service';
+import {RecipeApiService} from 'src/app/core/services/api/recipe-api.service';
 import {IRecipe, IRecipeResolved} from 'src/app/models/recipe.model';
-import {SessionService} from '../../services/session.service';
-import {Toastr, TOASTR_TOKEN} from 'src/app/shared/toastr.service';
+import {SessionService} from '../../core/services/session.service';
+import {Toastr, TOASTR_TOKEN} from 'src/app/core/services/toastr.service';
 
 @Component({
   selector: 'app-recipe-detail',

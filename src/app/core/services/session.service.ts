@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './api/auth.service';
+import { AuthService } from './auth.service';
 import { HttpClient } from '@angular/common/http';
-import { IUser } from '../models/user.model';
+import { IUser } from '../../models/user.model';
 import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable(
+  // { providedIn: 'root' }
+)
 export class SessionService {
 
   private admin = false;

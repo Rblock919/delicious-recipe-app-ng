@@ -1,57 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { ApproveRecipeDetailComponent } from './approve-recipe-detail/approve-recipe-detail.component';
-import { ApproveRecipeListComponent } from './approve-recipe-list/approve-recipe-list.component';
-import { EditRecipeListComponent } from './edit-recipe-list/edit-recipe-list.component';
-import { EditUserListComponent } from './edit-user-list/edit-user-list.component';
-import { AdminService } from '../services/api/admin.service';
-import { RecipeResolverService } from '../services/resolvers/recipe-resolver.service';
-import { UserResolverService } from '../services/resolvers/user-resolver.service';
-import { UnapprovedRecipeResolverService } from '../services/resolvers/unapproved-recipe-resolver.service';
+import { AdminService } from './services/admin.service';
+import { UserResolverService } from './services/user-resolver.service';
+import { UnapprovedRecipeResolverService } from './services/unapproved-recipe-resolver.service';
+import { AdminRoutingModule } from './admin-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild([
-      {
-        path: 'editRecipeList',
-        component: EditRecipeListComponent,
-        resolve: { resolvedData: RecipeResolverService },
-        data: { multipleRecipes: true }
-      },
-      {
-        path: 'approve',
-        component: ApproveRecipeListComponent,
-        resolve: { resolvedData: UnapprovedRecipeResolverService },
-        data: { multipleRecipes: true }
-      },
-      {
-        path: 'approve/:id',
-        component: ApproveRecipeDetailComponent,
-        resolve: { resolvedData: UnapprovedRecipeResolverService },
-        data: { multipleRecipes: false }
-      },
-      {
-        path: 'editUserList',
-        component: EditUserListComponent,
-        resolve: { resolvedData: UserResolverService },
-        data: { multipleUsers: true}
-      },
-      {
-        path: '',
-        redirectTo: '/home'
-      }
-    ]),
+    AdminRoutingModule,
     ReactiveFormsModule
   ],
   declarations: [
-    EditUserListComponent,
-    EditRecipeListComponent,
-    ApproveRecipeListComponent,
-    ApproveRecipeDetailComponent
+    AdminRoutingModule.components
   ],
   providers: [
     AdminService,

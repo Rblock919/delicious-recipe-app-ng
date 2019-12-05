@@ -2,10 +2,16 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Component, Inject, OnInit, SecurityContext} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 
-import {IRecipe, IRecipesResolved} from 'src/app/models/recipe.model';
-import {SessionService} from '../../services/session.service';
-import {Toastr, TOASTR_TOKEN} from '../../shared/toastr.service';
-import {RecipeApiService} from '../../services/api/recipe-api.service';
+import {
+  IRecipe,
+  IRecipesResolved,
+  IRecipeGQLResolved,
+  IRecipesGQLResolved,
+  IRecipeGQL
+} from 'src/app/models/recipe.model';
+import {SessionService} from '../../core/services/session.service';
+import {Toastr, TOASTR_TOKEN} from '../../core/services/toastr.service';
+import {RecipeApiService} from '../../core/services/api/recipe-api.service';
 
 @Component({
   selector: 'app-recipe-list',
@@ -15,9 +21,11 @@ import {RecipeApiService} from '../../services/api/recipe-api.service';
 export class RecipeListComponent implements OnInit {
 
   recipeList: IRecipe[];
+  // recipeList: IRecipeGQL[];
 
   // For modal purposes
   selectedRecipe: IRecipe;
+  // selectedRecipe: IRecipeGQL;
   rated: boolean;
   userRating = 0;
 
@@ -34,18 +42,46 @@ export class RecipeListComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private sanitizer: DomSanitizer,
+              // private graphQLService: GraphqlService,
               @Inject(TOASTR_TOKEN) private toastr: Toastr) { }
 
   ngOnInit() {
     window.scroll(0, 0);
-    const resolvedData: IRecipesResolved = this.route.snapshot.data.resolvedData;
+    // const resolvedData: IRecipesResolved = this.route.snapshot.data.resolvedData;
+    const resolvedData = this.route.snapshot.data.resolvedData as IRecipesGQLResolved;
 
     if (resolvedData.error) {
       console.error(`Error from resolver: ${JSON.stringify(resolvedData.error)}`);
-      this.router.navigate(['error'])
-        .then(r => console.log('Routed away from recipe list due to error'));
+      this.router.navigate(['error']);
     } else {
-      this.recipeList = resolvedData.recipes;
+      this.recipeList = [];
+      // console.log(`resolvedData: ${JSON.stringify(resolvedData.recipes)}`);
+
+      // have to loop through graphQL responses and reverse engineer maps since graphQL doesn't natively support maps
+      for (const recipe of resolvedData.recipes) {
+        let tmpRecipe: IRecipe;
+        const tmpMap = new Map<number, number>();
+
+        let counter = 0;
+        for (const key of recipe.raters.keys) {
+          tmpMap[key] = recipe.raters.values[counter];
+          counter++;
+        }
+
+        tmpRecipe = {
+          _id: recipe._id,
+          title: recipe.title,
+          producer: recipe.producer,
+          nutritionValues: {
+            calories: recipe.nutritionValues.calories
+          },
+          favoriters: recipe.favoriters,
+          raters: tmpMap,
+          imgDir: recipe.imgDir
+        };
+        this.recipeList.push(tmpRecipe);
+      }
+      // this.recipeList = resolvedData.recipes;
       this.userId = this.sessionService.getUser._id;
 
       // just temporarily assign it to 1st recipe to avoid errors
@@ -78,6 +114,7 @@ export class RecipeListComponent implements OnInit {
     this.topSelectedFilter = this.topSelectedFilter === input ? '' : input;
   }
 
+  // test after implementing GraphQL
   favEvent($event): void {
     const recipeToFav = $event.recipe as IRecipe;
     const favoriting = $event.favoriting as boolean;
@@ -98,9 +135,9 @@ export class RecipeListComponent implements OnInit {
 
   }
 
+  // test all below after implementing GraphQL
   triggerRate($event): void {
     this.selectedRecipe = $event as IRecipe;
-    // this.userRating = !!this.selectedRecipe.raters[this.userId] ? this.selectedRecipe.raters[this.userId] : 0;
     this.rated = !!this.selectedRecipe.raters[this.userId];
     this.userRating = this.rated ? this.selectedRecipe.raters[this.userId] : 0;
   }

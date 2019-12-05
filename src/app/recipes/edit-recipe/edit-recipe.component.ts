@@ -6,9 +6,9 @@ import { FormGroup, FormControl, FormBuilder,
 import { debounceTime } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
-import { RecipeApiService } from 'src/app/services/api/recipe-api.service';
+import { RecipeApiService } from 'src/app/core/services/api/recipe-api.service';
 import { IRecipe, IRecipeResolved } from 'src/app/models/recipe.model';
-import { TOASTR_TOKEN, Toastr } from '../../shared/toastr.service';
+import { TOASTR_TOKEN, Toastr } from '../../core/services/toastr.service';
 
 function numberChecker(): ValidatorFn {
 

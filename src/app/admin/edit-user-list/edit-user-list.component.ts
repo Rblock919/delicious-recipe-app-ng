@@ -1,9 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, Inject, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 
-import { AdminService } from 'src/app/services/api/admin.service';
+import { AdminService } from 'src/app/admin/services/admin.service';
 import { IUser, IUsersResolved } from 'src/app/models/user.model';
-import { TOASTR_TOKEN, Toastr } from '../../shared/toastr.service';
+import { TOASTR_TOKEN, Toastr } from '../../core/services/toastr.service';
 
 @Component({
   selector: 'app-edit-user-list',
@@ -25,9 +25,8 @@ export class EditUserListComponent implements OnInit {
 
   ngOnInit() {
     this.editedAdminFields = [];
-    // this.adminService.getUsers().subscribe(users => {
-      // this.userList = users;
-    const resolvedData: IUsersResolved = this.route.snapshot.data.resolvedData;
+    this.userList = [];
+    const resolvedData = this.route.snapshot.data.resolvedData as IUsersResolved;
 
     if (resolvedData.error) {
       console.error(`Error: ${resolvedData.error}`);
@@ -42,9 +41,6 @@ export class EditUserListComponent implements OnInit {
       });
     }
 
-    // }, err => {
-      // console.log('error getting user list: ' + JSON.stringify(err));
-    // });
   }
 
   changeStatus(user: IUser): void {

@@ -1,17 +1,17 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { AdminGuard } from './services/guards/admin.guard';
-import { RouteGuard } from './services/guards/route.guard';
-import { IndexGuard } from './services/guards/index.guard';
-import { SelectiveStrategy } from './services/selective-strategy.service';
-import { UserHomeComponent } from './common/user-home/user-home.component';
-import { RegisterComponent } from './common/login/register.component';
-import { LoginComponent } from './common/login/login.component';
-import { LogoutComponent } from './common/login/logout.component';
-import { SplashPageComponent } from './common/user-home/splash-page.component';
-import { PageNotFoundComponent } from './common/page-not-found/page-not-found.component';
-import { ErrorComponent } from './common/error/error.component';
+import { AdminGuard } from './core/guards/admin.guard';
+import { RouteGuard } from './core/guards/route.guard';
+import { IndexGuard } from './core/guards/index.guard';
+import { SelectiveStrategy } from './core/strategies/selective-strategy.service';
+import { UserHomeComponent } from './public/home/user-home.component';
+import { RegisterComponent } from './public/login/register.component';
+import { LoginComponent } from './public/login/login.component';
+import { LogoutComponent } from './public/login/logout.component';
+import { SplashPageComponent } from './public/home/splash-page.component';
+import { PageNotFoundComponent } from './public/page-not-found/page-not-found.component';
+import { ErrorComponent } from './public/error/error.component';
 
 const routes: Routes = [
   { path: 'index', component: SplashPageComponent, canActivate: [IndexGuard] },
@@ -43,6 +43,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {preloadingStrategy: SelectiveStrategy})],
-  // exports: [RouterModule]
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }

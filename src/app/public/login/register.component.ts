@@ -1,8 +1,8 @@
-import { SessionService } from '../../services/session.service';
+import { SessionService } from '../../core/services/session.service';
 import { Component, OnInit, Inject } from '@angular/core';
 import { IUser } from '../../models/user.model';
-import { AuthService } from '../../services/api/auth.service';
-import { TOASTR_TOKEN, Toastr } from '../../shared/toastr.service';
+import { AuthService } from '../../core/services/auth.service';
+import { TOASTR_TOKEN, Toastr } from '../../core/services/toastr.service';
 import { Router } from '@angular/router';
 
 @Component({

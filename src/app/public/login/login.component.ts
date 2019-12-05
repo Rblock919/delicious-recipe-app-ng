@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../../services/api/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 import { IUser } from '../../models/user.model';
-import { TOASTR_TOKEN, Toastr } from '../../shared/toastr.service';
-import { SessionService } from '../../services/session.service';
+import { TOASTR_TOKEN, Toastr } from '../../core/services/toastr.service';
+import { SessionService } from '../../core/services/session.service';
 // import {CookieService} from 'ngx-cookie-service';
 
 @Component({

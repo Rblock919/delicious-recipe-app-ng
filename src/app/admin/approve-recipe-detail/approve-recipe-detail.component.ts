@@ -5,8 +5,8 @@ import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import { IRecipe, IRecipeResolved } from 'src/app/models/recipe.model';
-import { TOASTR_TOKEN, Toastr } from 'src/app/shared/toastr.service';
-import { RecipeApiService } from 'src/app/services/api/recipe-api.service';
+import { TOASTR_TOKEN, Toastr } from 'src/app/core/services/toastr.service';
+import { RecipeApiService } from 'src/app/core/services/api/recipe-api.service';
 
 function numberChecker(): ValidatorFn {
 

@@ -1,13 +1,13 @@
 import {Component, OnInit, OnDestroy, Inject, SecurityContext} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 
-import { IRecipe, IRecipesResolved } from 'src/app/models/recipe.model';
-import { Toastr, TOASTR_TOKEN } from 'src/app/shared/toastr.service';
-import { SessionService } from 'src/app/services/session.service';
-import { LoggerService } from '../../services/util/logger.service';
-import {RecipeApiService} from '../../services/api/recipe-api.service';
+import { IRecipe, IRecipesGQLResolved } from 'src/app/models/recipe.model';
+import { Toastr, TOASTR_TOKEN } from 'src/app/core/services/toastr.service';
+import { SessionService } from 'src/app/core/services/session.service';
+import { LoggerService } from '../../core/services/logger.service';
+import { RecipeApiService } from '../../core/services/api/recipe-api.service';
 
 @Component({
   selector: 'app-recipe-search',
@@ -40,16 +40,47 @@ export class RecipeSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     window.scroll(0, 0);
-
-    // this.searchString = this.route.snapshot.params.searchString;
-    const resolvedData: IRecipesResolved = this.route.snapshot.data.resolvedData;
+    // const resolvedData: IRecipesResolved = this.route.snapshot.data.resolvedData;
+    const resolvedData = this.route.snapshot.data.resolvedData as IRecipesGQLResolved;
 
     if (resolvedData.error) {
       console.error(`Error in edit recipe ${resolvedData.error}`);
       this.toastr.error(`Error fetching recipes: ${resolvedData.error}`);
       this.router.navigate(['error']);
     } else {
-      this.recipeList = resolvedData.recipes;
+      this.recipeList = [];
+      // console.log(`resolvedData: ${JSON.stringify(resolvedData.recipes)}`);
+
+      // have to loop through graphQL responses and reverse engineer maps since graphQL doesn't natively support maps
+      for (const recipe of resolvedData.recipes) {
+        let tmpRecipe: IRecipe;
+        const tmpMap = new Map<number, number>();
+
+        let counter = 0;
+        for (const key of recipe.raters.keys) {
+          tmpMap[key] = recipe.raters.values[counter];
+          counter++;
+        }
+
+        tmpRecipe = {
+          _id: recipe._id,
+          title: recipe.title,
+          producer: recipe.producer,
+          nutritionValues: {
+            calories: recipe.nutritionValues.calories
+          },
+          favoriters: recipe.favoriters,
+          raters: tmpMap,
+          imgDir: recipe.imgDir
+        };
+        this.recipeList.push(tmpRecipe);
+      }
+      // this.recipeList = resolvedData.recipes;
+      this.userId = this.sessionService.getUser._id;
+
+      // just temporarily assign it to 1st recipe to avoid errors
+      this.selectedRecipe = this.recipeList[0];
+
     }
 
     this.userId = this.sessionService.getUser._id;

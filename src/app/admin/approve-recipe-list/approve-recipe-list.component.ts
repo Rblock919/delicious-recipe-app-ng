@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
-import { LoggerService } from '../../services/util/logger.service';
+import { LoggerService } from '../../core/services/logger.service';
 import { IRecipe, IRecipesResolved } from 'src/app/models/recipe.model';
 
 @Component({

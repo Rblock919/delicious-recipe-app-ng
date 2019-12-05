@@ -1,30 +1,30 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 
-import { Toastr, TOASTR_TOKEN } from './toastr.service';
-import { JQ_TOKEN } from './jQuery.service';
-
-const toastr: Toastr = window['toastr'];
-const jQuery = window['$'];
+import { StarComponent } from './components/star/star.component';
+import { CollapsibleWellComponent } from './components/collapsible-well/collapsible-well.component';
+import { IngredientsPipe } from './pipes/ingredients.pipe';
+import { OrderByPipe } from './pipes/order-by.pipe';
+import { FilterByPipe } from './pipes/filter-by.pipe';
 
 @NgModule({
   imports: [
     CommonModule
   ],
-  providers: [
-    {
-      provide: TOASTR_TOKEN,
-      useValue: toastr
-    },
-    {
-      provide: JQ_TOKEN,
-      useValue: jQuery
-    }
+  providers: [],
+  declarations: [
+    StarComponent,
+    CollapsibleWellComponent,
+    IngredientsPipe,
+    OrderByPipe,
+    FilterByPipe
   ],
-  declarations: [],
   exports: [
-    RouterModule
+    StarComponent,
+    CollapsibleWellComponent,
+    IngredientsPipe,
+    OrderByPipe,
+    FilterByPipe
   ]
 })
 export class SharedModule { }

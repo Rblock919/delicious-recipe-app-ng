@@ -1,6 +1,7 @@
-import { SessionService } from '../session.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate, Router, CanLoad, Route, UrlSegment } from '@angular/router';
+
+import { SessionService } from '../services/session.service';
 
 @Injectable(
   { providedIn: 'root' }
@@ -53,9 +54,10 @@ export class AdminGuard implements CanActivate, CanLoad {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     console.log('in admin guard');
 
+    // user is authenticated but no user data in session, generated new instance of app by either
+    // entering direct URL or refreshing the app. Wait a bit for session service to retrieve userdata
     if (this.sessionService.isAuthenticated && !this.sessionService.getUser) {
-      // user is authenticated but no user data in session, generated new instance of app by either
-      // entering direct URL or refreshing the app. Wait a bit for session service to retrieve userdata
+
         setTimeout(() => {
           if (this.sessionService.getUser && this.sessionService.getUser.isAdmin) {
             // console.log('returning true');

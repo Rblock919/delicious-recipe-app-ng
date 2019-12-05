@@ -7,9 +7,9 @@ import { templateSourceUrl } from '@angular/compiler';
 import { IUser, IUserResolved } from '../../models/user.model';
 import { environment } from 'src/environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable(
+  // { providedIn: 'root' }
+)
 export class AuthService {
   private uri = environment.path + 'auth';
 

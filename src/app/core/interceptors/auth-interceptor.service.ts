@@ -1,8 +1,8 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpInterceptor } from '@angular/common/http';
 
-import { LoggerService } from './util/logger.service';
-import { SessionService } from './session.service';
+import { LoggerService } from '../services/logger.service';
+import { SessionService } from '../services/session.service';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
