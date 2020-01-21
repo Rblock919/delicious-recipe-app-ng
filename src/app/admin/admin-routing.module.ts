@@ -13,26 +13,27 @@ const routes: Routes = [
   {
     path: 'editRecipeList',
     component: EditRecipeListComponent,
-    resolve: { resolvedData: RecipeResolverService },
-    data: { multipleRecipes: true, context: 'edit' }
+    // resolve: { resolvedData: RecipeResolverService },
+    data: { context: 'edit' }
+    // data: { multipleRecipes: true, context: 'edit' }
   },
   {
     path: 'approve',
     component: ApproveRecipeListComponent,
-    resolve: { resolvedData: UnapprovedRecipeResolverService },
-    data: { multipleRecipes: true }
+    // resolve: { resolvedData: UnapprovedRecipeResolverService },
+    // data: { multipleRecipes: true }
   },
   {
     path: 'approve/:id',
     component: ApproveRecipeDetailComponent,
-    resolve: { resolvedData: UnapprovedRecipeResolverService },
-    data: { multipleRecipes: false }
+    // resolve: { resolvedData: UnapprovedRecipeResolverService },
+    // data: { multipleRecipes: false }
   },
   {
     path: 'editUserList',
     component: EditUserListComponent,
-    resolve: { resolvedData: UserResolverService },
-    data: { multipleUsers: true }
+    // resolve: { resolvedData: UserResolverService },
+    // data: { multipleUsers: true }
   },
   {
     path: '',

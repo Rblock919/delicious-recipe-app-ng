@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from 'src/app/core/services/auth.service';
-import { TOASTR_TOKEN, Toastr} from '../../core/services/toastr.service';
+import { TOASTR_TOKEN, Toastr } from '../../core/services/toastr.service';
 import { SessionService } from '../../core/services/session.service';
 
 @Component({
@@ -35,11 +35,8 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    if (this.session.logout()) {
-      if (this.session.isAdmin) {
-        this.session.setAdminStatus(false);
-      }
-    }
+    this.session.logout();
+
     this.clearSearch();
 
     this.auth.signOut().subscribe(res => {

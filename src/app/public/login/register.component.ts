@@ -1,9 +1,10 @@
-import { SessionService } from '../../core/services/session.service';
 import { Component, OnInit, Inject } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { IUser } from '../../models/user.model';
 import { AuthService } from '../../core/services/auth.service';
+import { SessionService } from '../../core/services/session.service';
 import { TOASTR_TOKEN, Toastr } from '../../core/services/toastr.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -41,15 +42,13 @@ export class RegisterComponent implements OnInit {
     } else {
       this.passwordMessage = '';
       this.auth.signUp(this.userInfo).subscribe(res => {
-        let tempRes: any;
-        tempRes = res;
         this.submitted = true;
 
         if (!res) {
           console.error('Error creating new user');
         } else {
           this.sessionService.setUser(res.user as IUser);
-          localStorage.setItem('token', tempRes.token);
+          localStorage.setItem('token', res.token);
           this.toastr.success('Profile Successfully Created');
           this.router.navigate(['home']);
         }

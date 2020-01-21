@@ -19,6 +19,7 @@ export class SessionService {
     if (localStorage.getItem('token')) {
       localStorage.removeItem('token');
       this.userData = null;
+      this.admin = false;
       return true;
     } else {
       return false;

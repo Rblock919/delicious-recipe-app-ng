@@ -30,8 +30,9 @@ export class AdminService {
     return this.graphQLService.getApprovalList();
   }
 
-  getApprovalById(id: number): Observable<IRecipe> {
-    return this.httpClient.get<IRecipe>(`${this.uri}/approval/${id}`, {responseType: 'json'});
+  getApprovalById(id: number): Observable<any> {
+    // return this.httpClient.get<IRecipe>(`${this.uri}/approval/${id}`, {responseType: 'json'});
+    return this.graphQLService.getApprovalById(`${id}`);
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

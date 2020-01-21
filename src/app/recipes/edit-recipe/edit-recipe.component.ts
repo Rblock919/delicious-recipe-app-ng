@@ -1,8 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder,
-  Validators, AbstractControl, ValidatorFn,
-  FormArray } from '@angular/forms';
+  Validators, AbstractControl, ValidatorFn, FormArray } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
@@ -273,7 +272,7 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
 
 
   getRecipeInfo(): void {
-    if (this.id === '0') { // ading a recipe instead of editing one
+    if (this.id === '0') { // adding a recipe instead of editing one
       this.recipeForm = this.fb.group({
         producer: ['', Validators.required],
         title: ['', Validators.required],
@@ -300,17 +299,30 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
       this.watchProducer();
     } else { // editing a recipe
 
-        const resolvedData: IRecipeResolved = this.route.snapshot.data.resolvedData;
-
-        if (resolvedData.error) {
-          console.error(`Error in edit recipe ${resolvedData.error}`);
-          this.router.navigate(['error']);
-        }
+      this.apiService.getRecipe(this.id).subscribe(result => {
+        console.log(`result: ${JSON.stringify(result)}`);
+        const tmp = result.data as any;
+        // const resolvedData: IRecipeResolved = this.route.snapshot.data.resolvedData;
+        //
+        // if (resolvedData.error) {
+        //   console.error(`Error in edit recipe ${resolvedData.error}`);
+        //   this.router.navigate(['error']);
+        // }
 
         this.watchImageUrl();
         this.watchProducer();
 
-        this.recipe = resolvedData.recipe;
+        this.recipe = tmp.recipe;
+
+        // Don't actually need to have rater/favoriter information in recipe edit page
+        // const tmpMap = new Map<number, number>();
+        // let counter = 0;
+        // for (const key of tmp.recipe.raters.keys) {
+        //   tmpMap[key] = tmp.recipe.raters.values[counter];
+        //   counter++;
+        // }
+        //
+        // this.recipe.raters = tmpMap;
 
         if (this.ingredients) {
           this.ingredients.reset();
@@ -326,14 +338,14 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
         let preCookCounter = 0;
 
         this.recipe.ingredients.forEach(element => {
-          const choppedElement = element.split(' | ');
-          const ingredientName = choppedElement[0];
-          const ingredientAmount = choppedElement[1];
+          // const choppedElement = element.split(' | ');
+          // const ingredientName = choppedElement[0];
+          // const ingredientAmount = choppedElement[1];
           // console.log('ingredients array: ' + element);
           this.ingredients.push(this.buildIngredient());
           this.ingredients.at(ingredientCounter).patchValue({
-            name: ingredientName,
-            amount: ingredientAmount
+            name: element.name,
+            amount: element.amount
           });
           ingredientCounter++;
         });
@@ -364,7 +376,76 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
           nutrition: this.recipe.nutritionValues,
           imgDir: this.recipe.imgDir
         });
-      // });
+        // });
+      }, err => {
+        console.log(`err: ${err}`);
+      });
+
+    //   const resolvedData: IRecipeResolved = this.route.snapshot.data.resolvedData;
+    //
+    //   if (resolvedData.error) {
+    //     console.error(`Error in edit recipe ${resolvedData.error}`);
+    //     this.router.navigate(['error']);
+    //   }
+    //
+    //   this.watchImageUrl();
+    //   this.watchProducer();
+    //
+    //   this.recipe = resolvedData.recipe;
+    //
+    //   if (this.ingredients) {
+    //     this.ingredients.reset();
+    //   }
+    //   if (this.steps) {
+    //     this.steps.reset();
+    //   }
+    //
+    //   this.blueApronNutritionFlag = (this.recipe.producer === 'Blue Apron' && !!this.recipe.nutritionValues.fat);
+    //
+    //   let ingredientCounter = 0;
+    //   let stepCounter = 0;
+    //   let preCookCounter = 0;
+    //
+    //   this.recipe.ingredients.forEach(element => {
+    //     const choppedElement = element.split(' | ');
+    //     const ingredientName = choppedElement[0];
+    //     const ingredientAmount = choppedElement[1];
+    //     // console.log('ingredients array: ' + element);
+    //     this.ingredients.push(this.buildIngredient());
+    //     this.ingredients.at(ingredientCounter).patchValue({
+    //       name: ingredientName,
+    //       amount: ingredientAmount
+    //     });
+    //     ingredientCounter++;
+    //   });
+    //
+    //   this.recipe.preCook.forEach(element => {
+    //     this.preCook.push(this.buildPreCook());
+    //     this.preCook.at(preCookCounter).patchValue({
+    //       body: element
+    //     });
+    //     preCookCounter++;
+    //   });
+    //
+    //   this.recipe.steps.forEach(step => {
+    //     // console.log('Step ' + (stepCounter + 1) + ': ' + step.name + ' - ' + step.body);
+    //     this.steps.push(this.buildStep());
+    //     this.steps.at(stepCounter).patchValue({
+    //       name: step.name,
+    //       body: step.body
+    //     });
+    //     stepCounter++;
+    //   });
+    //
+    //   this.imageDir = this.recipe.imgDir;
+    //
+    //   this.recipeForm.patchValue({
+    //     producer: this.recipe.producer,
+    //     title: this.recipe.title,
+    //     nutrition: this.recipe.nutritionValues,
+    //     imgDir: this.recipe.imgDir
+    //   });
+    // // });
     }
 
   }

@@ -14,7 +14,7 @@ const routes: Routes = [
   {
     path: 'list',
     component: RecipeListComponent,
-    resolve: { resolvedData: RecipeResolverService },
+    // resolve: { resolvedData: RecipeResolverService },
     data: { multipleRecipes: true, context: 'list' }
   },
   {
@@ -30,15 +30,16 @@ const routes: Routes = [
   {
     path: ':id',
     component: RecipeDetailComponent,
-    resolve: { resolvedData: RecipeResolverService},
-    data: { multipleRecipes: false }
+    // resolve: { resolvedData: RecipeResolverService},
+    // data: { multipleRecipes: false }
   },
   {
     path: ':id/edit',
     component: EditRecipeComponent,
     canDeactivate: [RouteGuard],
-    resolve: { resolvedData: RecipeResolverService },
-    data: { context: 'editRecipe', multipleRecipes: false }
+    // resolve: { resolvedData: RecipeResolverService },
+    data: { context: 'editRecipe' }
+    // data: { context: 'editRecipe', multipleRecipes: false }
   },
   {
     path: '',
