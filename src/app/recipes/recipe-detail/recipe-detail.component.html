@@ -1,7 +1,7 @@
 <main role="main">
 
   <br>
-      <div class="container">
+      <div *ngIf="recipe" class="container">
           <div class="row">
             <div class="col-md-12">
               <div class="panel">
@@ -53,8 +53,8 @@
                               <h4>Ingredients</h4>
                             </div>
                             <div class="card-body text-center">
-                              <p class="ing-text" *ngFor="let ingredient of recipe.ingredients | ingredientsPipe">
-                                <span class="float-left">{{ingredient[0]}}</span> <span class="float-right">{{ingredient[1]}}</span><br>
+                              <p class="ing-text" *ngFor="let ingredient of recipe.ingredients">
+                                <span class="float-left">{{ingredient.name}}</span> <span class="float-right">{{ingredient.amount}}</span><br>
                               </p>
                             </div>
                           </div>

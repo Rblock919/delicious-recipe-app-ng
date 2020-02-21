@@ -1,5 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, Inject } from '@angular/core';
+import {Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { AdminService } from 'src/app/admin/services/admin.service';
 import { IUser, IUsersResolved } from 'src/app/models/user.model';
@@ -10,7 +11,9 @@ import { TOASTR_TOKEN, Toastr } from '../../core/services/toastr.service';
   templateUrl: './edit-user-list.component.html',
   styleUrls: ['./edit-user-list.component.scss']
 })
-export class EditUserListComponent implements OnInit {
+export class EditUserListComponent implements OnInit, OnDestroy {
+
+  private userSub: Subscription;
 
   userList: IUser[];
   updatedUserList: IUser[];
@@ -26,21 +29,23 @@ export class EditUserListComponent implements OnInit {
   ngOnInit() {
     this.editedAdminFields = [];
     this.userList = [];
-    const resolvedData = this.route.snapshot.data.resolvedData as IUsersResolved;
 
-    if (resolvedData.error) {
-      console.error(`Error: ${resolvedData.error}`);
-      this.router.navigate(['error']);
-    } else {
-      this.userList = resolvedData.users;
+    this.userSub = this.adminService.getUsers().subscribe(result => {
+      this.userList = result;
       let counter = 0;
       this.userList.forEach(user => {
         this.editedAdminFields.push();
         this.editedAdminFields[counter] = user.isAdmin;
         counter++;
       });
-    }
+    }, err => {
+      console.log(`err: ${err}`);
+    });
 
+  }
+
+  ngOnDestroy(): void {
+    this.userSub.unsubscribe();
   }
 
   changeStatus(user: IUser): void {
@@ -75,7 +80,7 @@ export class EditUserListComponent implements OnInit {
     });
 
     this.adminService.updateUsers(this.updatedUserList).subscribe(res => {
-      console.log('res: ' + res);
+      console.log('res: ' + JSON.stringify(res));
       this.toastr.success('Users Successfully Updated!');
       this.differentFromOriginal = false;
       let counter3 = 0;
@@ -89,7 +94,6 @@ export class EditUserListComponent implements OnInit {
       console.log('err: ' + JSON.stringify(err));
       this.toastr.error('Error Updating Users');
     });
-    console.log('submitted userList: ' + JSON.stringify(this.updatedUserList));
   }
 
 }

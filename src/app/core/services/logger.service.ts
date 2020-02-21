@@ -16,11 +16,11 @@ export class LoggerService {
   }
 
   fileLog(message: string): void {
-    // implement logging to a file
+    // TODO: implement logging to a file
   }
 
   fileError(message: string): void {
-    // implement logging to an error file
+    // TODO: implement logging to an error file
   }
 
 }

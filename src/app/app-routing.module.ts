@@ -37,7 +37,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [IndexGuard] },
   { path: 'logout', component: LogoutComponent },
   { path: '', pathMatch: 'full', redirectTo: 'index'},
-  { path: 'error', component: ErrorComponent }, // remove eventually
+  { path: 'error', component: ErrorComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 
