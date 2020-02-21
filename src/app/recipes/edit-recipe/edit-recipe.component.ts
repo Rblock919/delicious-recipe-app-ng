@@ -72,10 +72,6 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
       imgDir: ['', Validators.required]
     });
 
-    // console.log('right before watchProducer');
-    // this.watchProducer();
-    // this.watchImageUrl();
-
     this.sub = this.route.paramMap.subscribe(params => {
       this.id = params.get('id');
       if (this.id === '0') {
@@ -221,6 +217,7 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
       }
     }
 
+    // TODO: implement a better system of checking for extra nutrition info than just checking sugar
     if (this.recipeProducer === 'Home Chef' && this.recipeForm.get('nutrition.sugar').value !== '') {
       const nutritionControl = this.recipeForm.get('nutrition');
       nutritionControl.get('sugar').patchValue('');
@@ -234,7 +231,6 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
 
     let formRecipe: IRecipe;
     formRecipe = this.recipeForm.value;
-    // formRecipe.nutritionValues = this.recipeForm.get('nutrition').value;
 
 
     // user is adding new recipe
@@ -301,28 +297,11 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
 
       this.apiService.getRecipe(this.id).subscribe(result => {
         console.log(`result: ${JSON.stringify(result)}`);
-        const tmp = result.data as any;
-        // const resolvedData: IRecipeResolved = this.route.snapshot.data.resolvedData;
-        //
-        // if (resolvedData.error) {
-        //   console.error(`Error in edit recipe ${resolvedData.error}`);
-        //   this.router.navigate(['error']);
-        // }
 
         this.watchImageUrl();
         this.watchProducer();
 
-        this.recipe = tmp.recipe;
-
-        // Don't actually need to have rater/favoriter information in recipe edit page
-        // const tmpMap = new Map<number, number>();
-        // let counter = 0;
-        // for (const key of tmp.recipe.raters.keys) {
-        //   tmpMap[key] = tmp.recipe.raters.values[counter];
-        //   counter++;
-        // }
-        //
-        // this.recipe.raters = tmpMap;
+        this.recipe = result;
 
         if (this.ingredients) {
           this.ingredients.reset();
@@ -338,10 +317,6 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
         let preCookCounter = 0;
 
         this.recipe.ingredients.forEach(element => {
-          // const choppedElement = element.split(' | ');
-          // const ingredientName = choppedElement[0];
-          // const ingredientAmount = choppedElement[1];
-          // console.log('ingredients array: ' + element);
           this.ingredients.push(this.buildIngredient());
           this.ingredients.at(ingredientCounter).patchValue({
             name: element.name,
@@ -381,76 +356,11 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
         console.log(`err: ${err}`);
       });
 
-    //   const resolvedData: IRecipeResolved = this.route.snapshot.data.resolvedData;
-    //
-    //   if (resolvedData.error) {
-    //     console.error(`Error in edit recipe ${resolvedData.error}`);
-    //     this.router.navigate(['error']);
-    //   }
-    //
-    //   this.watchImageUrl();
-    //   this.watchProducer();
-    //
-    //   this.recipe = resolvedData.recipe;
-    //
-    //   if (this.ingredients) {
-    //     this.ingredients.reset();
-    //   }
-    //   if (this.steps) {
-    //     this.steps.reset();
-    //   }
-    //
-    //   this.blueApronNutritionFlag = (this.recipe.producer === 'Blue Apron' && !!this.recipe.nutritionValues.fat);
-    //
-    //   let ingredientCounter = 0;
-    //   let stepCounter = 0;
-    //   let preCookCounter = 0;
-    //
-    //   this.recipe.ingredients.forEach(element => {
-    //     const choppedElement = element.split(' | ');
-    //     const ingredientName = choppedElement[0];
-    //     const ingredientAmount = choppedElement[1];
-    //     // console.log('ingredients array: ' + element);
-    //     this.ingredients.push(this.buildIngredient());
-    //     this.ingredients.at(ingredientCounter).patchValue({
-    //       name: ingredientName,
-    //       amount: ingredientAmount
-    //     });
-    //     ingredientCounter++;
-    //   });
-    //
-    //   this.recipe.preCook.forEach(element => {
-    //     this.preCook.push(this.buildPreCook());
-    //     this.preCook.at(preCookCounter).patchValue({
-    //       body: element
-    //     });
-    //     preCookCounter++;
-    //   });
-    //
-    //   this.recipe.steps.forEach(step => {
-    //     // console.log('Step ' + (stepCounter + 1) + ': ' + step.name + ' - ' + step.body);
-    //     this.steps.push(this.buildStep());
-    //     this.steps.at(stepCounter).patchValue({
-    //       name: step.name,
-    //       body: step.body
-    //     });
-    //     stepCounter++;
-    //   });
-    //
-    //   this.imageDir = this.recipe.imgDir;
-    //
-    //   this.recipeForm.patchValue({
-    //     producer: this.recipe.producer,
-    //     title: this.recipe.title,
-    //     nutrition: this.recipe.nutritionValues,
-    //     imgDir: this.recipe.imgDir
-    //   });
-    // // });
     }
 
   }
 
-  private markFormGroupTouched(formGroup: FormGroup) {
+  private markFormGroupTouched(formGroup: FormGroup): void {
     (Object as any).values(formGroup.controls).forEach(control => {
       control.markAsTouched();
 
@@ -470,8 +380,6 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
     return this.fb.group({
       name: ['', Validators.required],
       amount: ['', Validators.required]
-      // amountFor2: ['', Validators.required],
-      // amountFor4: ['', Validators.required]
     });
   }
 
@@ -519,16 +427,12 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
 
   removeHomeChefValidators(formControl: AbstractControl): void {
     formControl.get('fat').clearValidators();
-   // formControl.get('fat').patchValue('');
     formControl.get('fat').updateValueAndValidity();
     formControl.get('carbohydrate').clearValidators();
-   // formControl.get('carbohydrate').patchValue('');
     formControl.get('carbohydrate').updateValueAndValidity();
     formControl.get('protein').clearValidators();
-   // formControl.get('protein').patchValue('');
     formControl.get('protein').updateValueAndValidity();
     formControl.get('sodium').clearValidators();
-   // formControl.get('sodium').patchValue('');
     formControl.get('sodium').updateValueAndValidity();
   }
 
@@ -545,16 +449,12 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
 
   removeHelloFreshValidators(formControl: AbstractControl): void {
     formControl.get('sugar').clearValidators();
-   //  formControl.get('sugar').patchValue('');
     formControl.get('sugar').updateValueAndValidity();
     formControl.get('saturatedFat').clearValidators();
-   //  formControl.get('saturatedFat').patchValue('');
     formControl.get('saturatedFat').updateValueAndValidity();
     formControl.get('cholesterol').clearValidators();
-   //  formControl.get('cholesterol').patchValue('');
     formControl.get('cholesterol').updateValueAndValidity();
     formControl.get('fiber').clearValidators();
-   //  formControl.get('fiber').patchValue('');
     formControl.get('fiber').updateValueAndValidity();
   }
 

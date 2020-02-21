@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { IApolloResponse } from '../../../models/apollo.model';
 import { IRecipe } from '../../../models/recipe.model';
+import { IUser } from '../../../models/user.model';
 import * as GqlQueries from '../../../models/gql.queries';
 import * as GqlMutations from '../../../models/gql.mutations';
 
@@ -18,7 +19,6 @@ export class GraphqlService {
 
   // TODO: modularize some of this code
   // TODO: use IApolloResponse where possible
-  // TODO: pipe and map all values to that subscribing components don't have to handle doing that
   submitForApproval(recipe: any): Observable<any> {
     console.log(`recipe: ${JSON.stringify(recipe)}`);
     const ingredientnames = [];
@@ -66,6 +66,59 @@ export class GraphqlService {
         query: GqlQueries.approvalListQuery
       }]
     });
+  }
+
+  updateRecipe(recipe: any): Observable<any> {
+    console.log(`recipe: ${JSON.stringify(recipe)}`);
+    const ingredientnames = [];
+    const ingredientamounts = [];
+    const stepnames = [];
+    const stepbodies = [];
+    const preCook = [];
+    for (const step of recipe.steps) {
+      stepnames.push(step.name);
+      stepbodies.push(step.body);
+    }
+    for (const ingredient of recipe.ingredients) {
+      ingredientnames.push(ingredient.name);
+      ingredientamounts.push(ingredient.amount);
+    }
+    for (const step of recipe.preCook) {
+      preCook.push(step.body);
+    }
+    console.log(`recipe: ${JSON.stringify(recipe)}`);
+
+    // return of (null);
+
+    return this.apollo.mutate({
+      mutation: GqlMutations.updateRecipeMutation,
+      variables: {
+        recipeId: recipe._id,
+        title: recipe.title,
+        producer: recipe.producer,
+        ingredientnames,
+        ingredientamounts,
+        preCook,
+        stepnames,
+        stepbodies,
+        imgDir: recipe.imgDir,
+        calories: +recipe.nutrition.calories,
+        // TODO: possibly make sure values that weren't provided are assigned as a proper value before getting sent to back-end
+        carbohydrate: +recipe.nutrition.carbohydrate,
+        fat: +recipe.nutrition.fat,
+        protein: +recipe.nutrition.protein,
+        saturatedFat: +recipe.nutrition.saturatedFat,
+        sugar: +recipe.nutrition.sugar,
+        fiber: +recipe.nutrition.fiber,
+        cholesterol: +recipe.nutrition.cholesterol,
+        sodium: +recipe.nutrition.sodium
+      },
+      refetchQueries: [
+        { query: GqlQueries.recipeListQuery },
+        { query: GqlQueries.recipeEditListQuery }
+      ]
+    });
+
   }
 
   approveRecipe(id: string, recipe: any): Observable<any> {
@@ -132,50 +185,77 @@ export class GraphqlService {
     });
   }
 
-  getRecipeList(): Observable<IApolloResponse> {
-    return this.apollo.watchQuery<IApolloResponse>({
-      query: GqlQueries.recipeListQuery
-    }).valueChanges;
+  deleteRecipe(id: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: GqlMutations.deleteRecipeMutation,
+      variables: {
+        recipeId: id
+      },
+      refetchQueries: [
+        { query: GqlQueries.recipeListQuery },
+        { query: GqlQueries.recipeEditListQuery }
+      ]
+    });
   }
 
-  getRecipeEditList(): Observable<any> {
+  getRecipeList(): Observable<IApolloResponse> {
+    return this.apollo.watchQuery<any>({
+      query: GqlQueries.recipeListQuery
+    }).valueChanges.pipe(map(result => result.data.recipes));
+  }
+
+  getRecipeEditList(): Observable<IApolloResponse> {
     return this.apollo.watchQuery<any>({
       query: GqlQueries.recipeEditListQuery
-    }).valueChanges;
+    }).valueChanges.pipe(map(result => result.data.recipes));
   }
 
-  getRecipe(id: string): Observable<any> {
-    return this.apollo.watchQuery({
+  getRecipe(id: string): Observable<IApolloResponse> {
+    return this.apollo.watchQuery<any>({
       query: GqlQueries.recipeQuery,
       variables: {
         recipeId: id
       }
-    }).valueChanges;
+    }).valueChanges.pipe(map(result => result.data.recipe));
   }
 
-  updateUsers(): void {
-    console.log('to do: create update users mutation...');
+  updateUsers(users: IUser[]): Observable<any> {
+    const idArr = [];
+    const isAdminArr = [];
+
+    for (const user of users) {
+      idArr.push(user._id);
+      isAdminArr.push(user.isAdmin);
+    }
+    return this.apollo.mutate({
+      mutation: GqlMutations.updateUsersMutation,
+      variables: {
+        ids: idArr,
+        isAdmins: isAdminArr
+      },
+      refetchQueries: [{query: GqlQueries.userListQuery}]
+    });
   }
 
-  getUserList(): Observable<any> {
-    return this.apollo.watchQuery({
+  getUserList(): Observable<IApolloResponse> {
+    return this.apollo.watchQuery<any>({
       query: GqlQueries.userListQuery
-    }).valueChanges;
+    }).valueChanges.pipe(map(result => result.data.users));
   }
 
-  getApprovalList(): Observable<any> {
-    return this.apollo.watchQuery({
+  getApprovalList(): Observable<IApolloResponse> {
+    return this.apollo.watchQuery<any>({
       query: GqlQueries.approvalListQuery
-    }).valueChanges;
+    }).valueChanges.pipe(map(result => result.data.unapprovedRecipes));
   }
 
-  getApprovalById(id: string): Observable<any> {
-    return this.apollo.watchQuery({
+  getApprovalById(id: string): Observable<IApolloResponse> {
+    return this.apollo.watchQuery<any>({
       query: GqlQueries.approvalQuery,
       variables: {
         recipeId: id
       }
-    }).valueChanges;
+    }).valueChanges.pipe(map(result => result.data.unapprovedRecipe));
   }
 
   rateRecipe(id: string, ratersKeys: string[], ratersValues: string[]): Observable<any> {
@@ -225,7 +305,6 @@ export class GraphqlService {
     }).pipe(map(result => result.data.signUp));
   }
 
-  // TODO: see if I should still use IApolloResponse here?
   signOut(): Observable<any> {
     return this.apollo.watchQuery<any>({
       query: GqlQueries.signOutQuery

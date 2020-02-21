@@ -40,7 +40,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   constructor(private sessionService: SessionService,
               private apiService: RecipeApiService,
-              private route: ActivatedRoute,
               private router: Router,
               private sanitizer: DomSanitizer,
               @Inject(TOASTR_TOKEN) private toastr: Toastr) { }
@@ -89,11 +88,12 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     // }
 
     this.recipeSub = this.apiService.getRecipeList().subscribe(result => {
-      const tmp = result.data as any;
+      // console.log(`RESULT: ${JSON.stringify(result)}`);
+      // const tmp = result as any;
       this.recipeList = [];
 
       // have to loop through graphQL responses and reverse engineer maps since graphQL doesn't natively support maps
-      for (const recipe of tmp.recipes) {
+      for (const recipe of result) {
         let tmpRecipe: IRecipe;
         const tmpMap = new Map<number, number>();
 
@@ -189,8 +189,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   submitRate(): void {
     this.selectedRecipe.raters[this.userId] = this.userRating;
-
-    console.log(`sel recipe: ${JSON.stringify(this.selectedRecipe)}`);
 
     this.apiService.rateRecipe(this.selectedRecipe).subscribe((res) => {
       console.log(`res: ${res}`);

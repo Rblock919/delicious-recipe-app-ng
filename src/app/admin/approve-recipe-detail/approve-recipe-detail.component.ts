@@ -80,9 +80,8 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
     this.watchImageUrl();
 
     this.recipeSub = this.adminService.getApprovalById(this.recipeId).subscribe(result => {
-      console.log(`result: ${JSON.stringify(result)}`);
-      const tmp = result.data as any;
-      this.recipe = tmp.unapprovedRecipe;
+      // console.log(`result: ${JSON.stringify(result)}`);
+      this.recipe = result;
       this.setValidations(this.recipe.producer);
 
       if (this.ingredients) {

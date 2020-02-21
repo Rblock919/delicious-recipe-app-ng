@@ -30,31 +30,14 @@ export class EditUserListComponent implements OnInit, OnDestroy {
     this.editedAdminFields = [];
     this.userList = [];
 
-    // const resolvedData = this.route.snapshot.data.resolvedData as IUsersResolved;
-    //
-    // if (resolvedData.error) {
-    //   console.error(`Error: ${resolvedData.error}`);
-    //   this.router.navigate(['error']);
-    // } else {
-    //   this.userList = resolvedData.users;
-    //   let counter = 0;
-    //   this.userList.forEach(user => {
-    //     this.editedAdminFields.push();
-    //     this.editedAdminFields[counter] = user.isAdmin;
-    //     counter++;
-    //   });
-    // }
-
     this.userSub = this.adminService.getUsers().subscribe(result => {
-      const tmp = result.data as any;
-      this.userList = tmp.users;
+      this.userList = result;
       let counter = 0;
       this.userList.forEach(user => {
         this.editedAdminFields.push();
         this.editedAdminFields[counter] = user.isAdmin;
         counter++;
       });
-      console.log(`result: ${JSON.stringify(result)}`);
     }, err => {
       console.log(`err: ${err}`);
     });
@@ -96,9 +79,8 @@ export class EditUserListComponent implements OnInit, OnDestroy {
       counter++;
     });
 
-    // TODO: create mutation for this in graphql
     this.adminService.updateUsers(this.updatedUserList).subscribe(res => {
-      console.log('res: ' + res);
+      console.log('res: ' + JSON.stringify(res));
       this.toastr.success('Users Successfully Updated!');
       this.differentFromOriginal = false;
       let counter3 = 0;
@@ -112,7 +94,6 @@ export class EditUserListComponent implements OnInit, OnDestroy {
       console.log('err: ' + JSON.stringify(err));
       this.toastr.error('Error Updating Users');
     });
-    console.log('submitted userList: ' + JSON.stringify(this.updatedUserList));
   }
 
 }

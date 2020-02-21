@@ -36,8 +36,7 @@ export class LoginComponent implements OnInit {
   login() {
     console.log('Logging in..');
     this.authService.signIn(this.userInfo).subscribe(result => {
-      console.log(`result: ${JSON.stringify(result)}`);
-      console.log('Response Token: ' + result.token);
+      // console.log('Response Token: ' + result.token);
       localStorage.setItem('token', result.token);
       const user: IUser = {
         _id: result.user._id,
@@ -53,6 +52,7 @@ export class LoginComponent implements OnInit {
       }
     }, err => {
       // TODO: handle graphql errors like wrong username and/or password
+      this.message = err;
       console.log(`err: ${err}`);
     });
   }

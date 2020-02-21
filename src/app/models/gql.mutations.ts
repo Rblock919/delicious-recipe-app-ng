@@ -37,6 +37,29 @@ export const addRecipeMutation = gql`
   }
 `;
 
+export const updateRecipeMutation = gql`
+    mutation updateRecipe($recipeId: String!, $title: String!, $producer: String!, $ingredientnames: [String]!, $ingredientamounts: [String]!,
+      $preCook: [String], $stepnames: [String]!, $stepbodies: [String]!, $imgDir: String!, $calories: Int!, $fat: Int, $saturatedFat: Float,
+      $carbohydrate: Int, $sugar: Int, $fiber: Int, $protein: Int, $cholesterol: Int, $sodium: Int) {
+      updateRecipe(recipeId: $recipeId, title: $title, producer: $producer, ingredientnames: $ingredientnames, ingredientamounts: $ingredientamounts,
+        preCook: $preCook, stepnames: $stepnames, stepbodies: $stepbodies, imgDir: $imgDir, calories: $calories, fat: $fat,
+        saturatedFat: $saturatedFat, carbohydrate: $carbohydrate, sugar: $sugar, fiber: $fiber, protein: $protein, cholesterol: $cholesterol,
+        sodium: $sodium)
+    }
+`;
+
+export const updateUsersMutation = gql`
+    mutation updateUsers($ids: [String]!, $isAdmins: [Boolean]!) {
+      updateUsers(idArr: $ids, isAdminArr: $isAdmins)
+    }
+`;
+
+export const deleteRecipeMutation = gql`
+    mutation deleteRecipe($recipeId: String!) {
+      deleteRecipe(id: $recipeId)
+    }
+`;
+
 export const rejectRecipeMutation = gql`
   mutation rejectRecipe($recipeId: String!) {
     rejectRecipe(id: $recipeId)

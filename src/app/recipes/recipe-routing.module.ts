@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
-import { RecipeResolverService } from '../core/resolvers/recipe-resolver.service';
+// import { RecipeResolverService } from '../core/resolvers/recipe-resolver.service';
 import { SubmittedComponent } from './edit-recipe/submitted.component';
 import { RecipeSearchComponent } from './recipe-search/recipe-search.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
@@ -14,8 +14,7 @@ const routes: Routes = [
   {
     path: 'list',
     component: RecipeListComponent,
-    // resolve: { resolvedData: RecipeResolverService },
-    data: { multipleRecipes: true, context: 'list' }
+    data: { context: 'list' }
   },
   {
     path: 'submitted',
@@ -24,22 +23,17 @@ const routes: Routes = [
   {
     path: 'search',
     component: RecipeSearchComponent,
-    resolve: { resolvedData: RecipeResolverService },
-    data: { multipleRecipes: true, context: 'list' }
+    data: { context: 'list' }
   },
   {
     path: ':id',
     component: RecipeDetailComponent,
-    // resolve: { resolvedData: RecipeResolverService},
-    // data: { multipleRecipes: false }
   },
   {
     path: ':id/edit',
     component: EditRecipeComponent,
     canDeactivate: [RouteGuard],
-    // resolve: { resolvedData: RecipeResolverService },
     data: { context: 'editRecipe' }
-    // data: { context: 'editRecipe', multipleRecipes: false }
   },
   {
     path: '',

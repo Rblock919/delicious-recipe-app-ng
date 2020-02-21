@@ -36,9 +36,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     window.scroll(0, 0);
     this.recipeId = this.route.snapshot.params.id;
     this.recipeSub = this.recipeApi.getRecipe(this.recipeId).subscribe(result => {
-      console.log(`result: ${JSON.stringify(result)}`);
-      const tmp = result.data as any;
-      this.recipe = tmp.recipe;
+      // console.log(`result: ${JSON.stringify(result)}`);
+      this.recipe = result;
       this.recipeId = this.recipe._id;
       let favoriters: string[];
       favoriters = this.recipe.favoriters;
@@ -52,8 +51,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       const tmpMap = new Map<number, number>();
 
       let counter = 0;
-      for (const key of tmp.recipe.raters.keys) {
-        tmpMap[key] = tmp.recipe.raters.values[counter];
+      for (const key of result.raters.keys) {
+        tmpMap[key] = result.raters.values[counter];
         counter++;
       }
 
@@ -74,42 +73,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     }, err => {
       console.log(`err: ${err}`);
     });
-    // const resolvedData: IRecipeResolved = this.route.snapshot.data.resolvedData;
-    //
-    // if (resolvedData.error) {
-    //   console.error(`Error in recipe detail comp: ${JSON.stringify(resolvedData.error)}`);
-    //   if (resolvedData.error.error.ErrMessage) {
-    //     console.log(`ErrMessage: ${resolvedData.error.error.ErrMessage}`);
-    //   }
-    //   console.log('routing to error page...');
-    //   this.router.navigate(['error']);
-    // } else {
-    //   this.recipe = resolvedData.recipe;
-    //   this.recipeId = this.recipe._id;
-    //   let favoriters: string[];
-    //   favoriters = this.recipe.favoriters;
-    //   this.favorited = favoriters.indexOf('' + this.session.getUser._id) > -1;
-    //   if (this.recipe.producer === 'Hello Fresh') {
-    //     this.preCookTitle = 'Bust Out:';
-    //   } else if (this.recipe.producer === 'Home Chef') {
-    //     this.preCookTitle = 'Before You Cook:';
-    //   }
-    //
-    //   if (Object.keys(this.recipe.raters).length > 0) {
-    //     this.rated = !!this.recipe.raters[this.session.getUser._id];
-    //     this.userRating = this.rated ? this.recipe.raters[this.session.getUser._id] : 0;
-    //
-    //     let ratingCounter = 0;
-    //     for (const value of Object.values(this.recipe.raters)) {
-    //       this.avgRating += Number(value);
-    //       ratingCounter++;
-    //     }
-    //
-    //     this.avgRating /= ratingCounter;
-    //   }
-    //
-    // }
-
 
   }
 
