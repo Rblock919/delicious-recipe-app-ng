@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+import { IRecipe } from '../../models/recipe.model';
+import {GraphqlService} from '../../core/services/api/graphql.service';
+
 @Component({
   selector: 'app-user-home',
   templateUrl: './user-home.component.html',
@@ -7,8 +10,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserHomeComponent implements OnInit {
 
-  constructor() { }
+  private recipes: IRecipe[];
+  loading = true;
 
-  ngOnInit() { }
+  constructor(private gqlService: GraphqlService) { }
+
+  ngOnInit() {
+    // this.gqlService.getRecipeList().subscribe((result) => {
+    //   console.log('result: ' + JSON.stringify(result.data));
+    // }, err => {
+    //   console.log(`err ${err}`);
+    // });
+  }
 
 }

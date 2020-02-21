@@ -7,6 +7,7 @@ import { debounceTime } from 'rxjs/operators';
 import { IRecipe, IRecipeResolved } from 'src/app/models/recipe.model';
 import { TOASTR_TOKEN, Toastr } from 'src/app/core/services/toastr.service';
 import { RecipeApiService } from 'src/app/core/services/api/recipe-api.service';
+import { AdminService } from '../services/admin.service';
 
 function numberChecker(): ValidatorFn {
 
@@ -31,6 +32,7 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
 
   private imgUrlSub: Subscription;
   private producerSub: Subscription;
+  private recipeSub: Subscription;
 
   recipeForm: FormGroup;
   recipeProducer: string;
@@ -43,13 +45,16 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
   editMode = false;
   blueApronNutritionFlag = false;
 
+
   constructor(private recipeApiService: RecipeApiService,
+              private adminService: AdminService,
               private route: ActivatedRoute,
               private router: Router,
               @Inject(TOASTR_TOKEN)private toastr: Toastr,
               private fb: FormBuilder) { }
 
   ngOnInit() {
+    console.log('in onInit');
     this.recipeId = this.route.snapshot.params.id;
     // console.log('Id in detail comp: ' + this.recipeId);
 
@@ -74,73 +79,139 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
 
     this.watchImageUrl();
 
-    const resolvedData: IRecipeResolved = this.route.snapshot.data.resolvedData;
-    if (resolvedData.error) {
-      console.error(resolvedData.error);
-      this.router.navigate(['error']);
-    } else {
-        this.recipe = resolvedData.recipe;
-        this.setValidations(this.recipe.producer);
+    this.recipeSub = this.adminService.getApprovalById(this.recipeId).subscribe(result => {
+      // console.log(`result: ${JSON.stringify(result)}`);
+      this.recipe = result;
+      this.setValidations(this.recipe.producer);
 
-        if (this.ingredients) {
-          this.ingredients.reset();
-        }
-        if (this.steps) {
-          this.steps.reset();
-        }
+      if (this.ingredients) {
+        this.ingredients.reset();
+      }
+      if (this.steps) {
+        this.steps.reset();
+      }
 
-        let ingredientCounter = 0;
-        let stepCounter = 0;
-        let preCookCounter = 0;
+      let ingredientCounter = 0;
+      let stepCounter = 0;
+      let preCookCounter = 0;
 
-        this.recipe.ingredients.forEach(element => {
-          const choppedElement = element.split(' | ');
-          const ingredientName = choppedElement[0];
-          const ingredientAmount = choppedElement[1];
-          // console.log('ingredients array: ' + element);
-          this.ingredients.push(this.buildIngredient());
-          this.ingredients.at(ingredientCounter).patchValue({
-            name: ingredientName,
-            amount: ingredientAmount
-          });
-          ingredientCounter++;
+      this.recipe.ingredients.forEach(element => {
+        // const choppedElement = element.split(' | ');
+        // const ingredientName = choppedElement[0];
+        // const ingredientAmount = choppedElement[1];
+        // console.log('ingredients array: ' + element);
+        this.ingredients.push(this.buildIngredient());
+        this.ingredients.at(ingredientCounter).patchValue({
+          name: element.name,
+          amount: element.amount
         });
+        ingredientCounter++;
+      });
 
-        this.recipe.preCook.forEach(element => {
-          this.preCook.push(this.buildPreCook());
-          this.preCook.at(preCookCounter).patchValue({
-            body: element
-          });
-          preCookCounter++;
+      this.recipe.preCook.forEach(element => {
+        this.preCook.push(this.buildPreCook());
+        this.preCook.at(preCookCounter).patchValue({
+          body: element
         });
+        preCookCounter++;
+      });
 
-        this.recipe.steps.forEach(step => {
-          // console.log('Step ' + (stepCounter + 1) + ': ' + step.name + ' - ' + step.body);
-          this.steps.push(this.buildStep());
-          this.steps.at(stepCounter).patchValue({
-            name: step.name,
-            body: step.body
-          });
-          stepCounter++;
+      this.recipe.steps.forEach(step => {
+        // console.log('Step ' + (stepCounter + 1) + ': ' + step.name + ' - ' + step.body);
+        this.steps.push(this.buildStep());
+        this.steps.at(stepCounter).patchValue({
+          name: step.name,
+          body: step.body
         });
+        stepCounter++;
+      });
 
-        this.imageDir = this.recipe.imgDir;
+      this.imageDir = this.recipe.imgDir;
 
-        if (this.recipe.producer === 'Blue Apron' && this.recipe.nutritionValues.fat) {
-          console.log('producer is BA and nutrition info was provided...');
-          this.changeBlueApronNutritionalFlag();
-        }
+      if (this.recipe.producer === 'Blue Apron' && this.recipe.nutritionValues.fat) {
+        console.log('producer is BA and nutrition info was provided...');
+        this.changeBlueApronNutritionalFlag();
+      }
 
-        this.recipeForm.patchValue({
-          producer: this.recipe.producer,
-          title: this.recipe.title,
-          nutrition: this.recipe.nutritionValues,
-          imgDir: this.recipe.imgDir
-        });
+      this.recipeForm.patchValue({
+        producer: this.recipe.producer,
+        title: this.recipe.title,
+        nutrition: this.recipe.nutritionValues,
+        imgDir: this.recipe.imgDir
+      });
 
-        this.watchProducer();
+      this.watchProducer();
+    }, err => {
+      console.log(`err: ${err}`);
+    });
 
-    }
+    // const resolvedData: IRecipeResolved = this.route.snapshot.data.resolvedData;
+    // if (resolvedData.error) {
+    //   console.error(resolvedData.error);
+    //   this.router.navigate(['error']);
+    // } else {
+    //     this.recipe = resolvedData.recipe;
+    //     this.setValidations(this.recipe.producer);
+    //
+    //     if (this.ingredients) {
+    //       this.ingredients.reset();
+    //     }
+    //     if (this.steps) {
+    //       this.steps.reset();
+    //     }
+    //
+    //     let ingredientCounter = 0;
+    //     let stepCounter = 0;
+    //     let preCookCounter = 0;
+    //
+    //     this.recipe.ingredients.forEach(element => {
+    //       const choppedElement = element.split(' | ');
+    //       const ingredientName = choppedElement[0];
+    //       const ingredientAmount = choppedElement[1];
+    //       // console.log('ingredients array: ' + element);
+    //       this.ingredients.push(this.buildIngredient());
+    //       this.ingredients.at(ingredientCounter).patchValue({
+    //         name: ingredientName,
+    //         amount: ingredientAmount
+    //       });
+    //       ingredientCounter++;
+    //     });
+    //
+    //     this.recipe.preCook.forEach(element => {
+    //       this.preCook.push(this.buildPreCook());
+    //       this.preCook.at(preCookCounter).patchValue({
+    //         body: element
+    //       });
+    //       preCookCounter++;
+    //     });
+    //
+    //     this.recipe.steps.forEach(step => {
+    //       // console.log('Step ' + (stepCounter + 1) + ': ' + step.name + ' - ' + step.body);
+    //       this.steps.push(this.buildStep());
+    //       this.steps.at(stepCounter).patchValue({
+    //         name: step.name,
+    //         body: step.body
+    //       });
+    //       stepCounter++;
+    //     });
+    //
+    //     this.imageDir = this.recipe.imgDir;
+    //
+    //     if (this.recipe.producer === 'Blue Apron' && this.recipe.nutritionValues.fat) {
+    //       console.log('producer is BA and nutrition info was provided...');
+    //       this.changeBlueApronNutritionalFlag();
+    //     }
+    //
+    //     this.recipeForm.patchValue({
+    //       producer: this.recipe.producer,
+    //       title: this.recipe.title,
+    //       nutrition: this.recipe.nutritionValues,
+    //       imgDir: this.recipe.imgDir
+    //     });
+    //
+    //     this.watchProducer();
+    //
+    // }
 
   }
 
@@ -172,6 +243,7 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.imgUrlSub.unsubscribe();
     this.producerSub.unsubscribe();
+    this.recipeSub.unsubscribe();
   }
 
   watchProducer(): void {
@@ -296,10 +368,11 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
     formRecipe.favoriters = [];
     formRecipe.raters = {} as Map<number, number>;
 
-    this.recipeApiService.addRecipe(formRecipe, this.recipeId).subscribe(res => {
+    // add recipe API call
+    this.recipeApiService.addRecipe(formRecipe, this.recipeId).subscribe(result => {
       this.submitted = true;
       this.toastr.success('Recipe Successfully Approved!');
-      this.router.navigate(['/recipe', res.id]);
+      this.router.navigate(['/recipe', result.id]);
     }, err => {
       this.toastr.error('Error Submitting Recipe');
       console.log('ERROR SUBMITTING RECIPE: ' + JSON.stringify(err));
@@ -325,7 +398,7 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
     }, (err) => {
       console.error(`Error rejecting recipe: ${err}`);
       this.toastr.error('Error rejecting recipe');
-    })
+    });
   }
 
   clearFormArray(formArray: FormArray): void {

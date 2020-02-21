@@ -17,7 +17,9 @@ import { RecipeApiService } from '../../core/services/api/recipe-api.service';
 export class RecipeSearchComponent implements OnInit, OnDestroy {
 
   searchString: string;
-  private sub: Subscription;
+
+  private searchSub: Subscription;
+  private recipeSub: Subscription;
 
   recipeList: IRecipe[];
   filteredList: IRecipe[];
@@ -41,18 +43,54 @@ export class RecipeSearchComponent implements OnInit, OnDestroy {
   ngOnInit() {
     window.scroll(0, 0);
     // const resolvedData: IRecipesResolved = this.route.snapshot.data.resolvedData;
-    const resolvedData = this.route.snapshot.data.resolvedData as IRecipesGQLResolved;
+    // const resolvedData = this.route.snapshot.data.resolvedData as IRecipesGQLResolved;
+    //
+    // if (resolvedData.error) {
+    //   console.error(`Error in edit recipe ${resolvedData.error}`);
+    //   this.toastr.error(`Error fetching recipes: ${resolvedData.error}`);
+    //   this.router.navigate(['error']);
+    // } else {
+    //   this.recipeList = [];
+    //   // console.log(`resolvedData: ${JSON.stringify(resolvedData.recipes)}`);
+    //
+    //   // have to loop through graphQL responses and reverse engineer maps since graphQL doesn't natively support maps
+    //   for (const recipe of resolvedData.recipes) {
+    //     let tmpRecipe: IRecipe;
+    //     const tmpMap = new Map<number, number>();
+    //
+    //     let counter = 0;
+    //     for (const key of recipe.raters.keys) {
+    //       tmpMap[key] = recipe.raters.values[counter];
+    //       counter++;
+    //     }
+    //
+    //     tmpRecipe = {
+    //       _id: recipe._id,
+    //       title: recipe.title,
+    //       producer: recipe.producer,
+    //       nutritionValues: {
+    //         calories: recipe.nutritionValues.calories
+    //       },
+    //       favoriters: recipe.favoriters,
+    //       raters: tmpMap,
+    //       imgDir: recipe.imgDir
+    //     };
+    //     this.recipeList.push(tmpRecipe);
+    //   }
+    //   // this.recipeList = resolvedData.recipes;
+    //   this.userId = this.sessionService.getUser._id;
+    //
+    //   // just temporarily assign it to 1st recipe to avoid errors
+    //   this.selectedRecipe = this.recipeList[0];
+    //
+    // }
 
-    if (resolvedData.error) {
-      console.error(`Error in edit recipe ${resolvedData.error}`);
-      this.toastr.error(`Error fetching recipes: ${resolvedData.error}`);
-      this.router.navigate(['error']);
-    } else {
+    this.recipeSub = this.apiService.getRecipeList().subscribe(result => {
       this.recipeList = [];
       // console.log(`resolvedData: ${JSON.stringify(resolvedData.recipes)}`);
 
       // have to loop through graphQL responses and reverse engineer maps since graphQL doesn't natively support maps
-      for (const recipe of resolvedData.recipes) {
+      for (const recipe of result) {
         let tmpRecipe: IRecipe;
         const tmpMap = new Map<number, number>();
 
@@ -80,17 +118,19 @@ export class RecipeSearchComponent implements OnInit, OnDestroy {
 
       // just temporarily assign it to 1st recipe to avoid errors
       this.selectedRecipe = this.recipeList[0];
+      this.filterRecipes();
+    }, err => {
+      console.error(`err: ${err}`);
+      this.router.navigate(['error']);
+    });
 
-    }
-
-    this.userId = this.sessionService.getUser._id;
-    this.sub = this.route.queryParamMap.subscribe(params => {
+    this.searchSub = this.route.queryParamMap.subscribe(params => {
       this.loggerService.consoleLog(`Param changed to: ${params.get('searchString')}`);
       this.searchString = params.get('searchString');
-      this.filterRecipes();
+      if (!!this.recipeList) {
+        this.filterRecipes();
+      }
     });
-    // just temporarily assign a value to avoid errors
-    this.selectedRecipe = this.recipeList[0];
 
   }
 
@@ -100,7 +140,8 @@ export class RecipeSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.searchSub.unsubscribe();
+    this.recipeSub.unsubscribe();
   }
 
   favEvent($event): void {
@@ -134,6 +175,7 @@ export class RecipeSearchComponent implements OnInit, OnDestroy {
 
   submitRate(): void {
     this.selectedRecipe.raters[this.userId] = this.userRating;
+
     this.apiService.rateRecipe(this.selectedRecipe).subscribe((res) => {
       console.log(`res: ${res}`);
       const idx = this.recipeList.indexOf(this.selectedRecipe);

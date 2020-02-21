@@ -1,6 +1,7 @@
-import {Component, Inject, OnInit, SecurityContext} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, SecurityContext} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
+import {Subscription} from 'rxjs';
 
 import {RecipeApiService} from 'src/app/core/services/api/recipe-api.service';
 import {IRecipe, IRecipeResolved} from 'src/app/models/recipe.model';
@@ -12,7 +13,7 @@ import {Toastr, TOASTR_TOKEN} from 'src/app/core/services/toastr.service';
   templateUrl: './recipe-detail.component.html',
   styleUrls: ['./recipe-detail.component.scss']
 })
-export class RecipeDetailComponent implements OnInit {
+export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   recipe: IRecipe;
   recipeId: number;
@@ -21,6 +22,7 @@ export class RecipeDetailComponent implements OnInit {
   rated: boolean;
   userRating = 0;
   avgRating = 0;
+  recipeSub: Subscription;
 
   constructor(private recipeApi: RecipeApiService,
               private route: ActivatedRoute,
@@ -32,17 +34,10 @@ export class RecipeDetailComponent implements OnInit {
 
   ngOnInit() {
     window.scroll(0, 0);
-    const resolvedData: IRecipeResolved = this.route.snapshot.data.resolvedData;
-
-    if (resolvedData.error) {
-      console.error(`Error in recipe detail comp: ${JSON.stringify(resolvedData.error)}`);
-      if (resolvedData.error.error.ErrMessage) {
-        console.log(`ErrMessage: ${resolvedData.error.error.ErrMessage}`);
-      }
-      console.log('routing to error page...');
-      this.router.navigate(['error']);
-    } else {
-      this.recipe = resolvedData.recipe;
+    this.recipeId = this.route.snapshot.params.id;
+    this.recipeSub = this.recipeApi.getRecipe(this.recipeId).subscribe(result => {
+      // console.log(`result: ${JSON.stringify(result)}`);
+      this.recipe = result;
       this.recipeId = this.recipe._id;
       let favoriters: string[];
       favoriters = this.recipe.favoriters;
@@ -53,8 +48,18 @@ export class RecipeDetailComponent implements OnInit {
         this.preCookTitle = 'Before You Cook:';
       }
 
+      const tmpMap = new Map<number, number>();
+
+      let counter = 0;
+      for (const key of result.raters.keys) {
+        tmpMap[key] = result.raters.values[counter];
+        counter++;
+      }
+
+      this.recipe.raters = tmpMap;
+
       if (Object.keys(this.recipe.raters).length > 0) {
-        this.rated = !!this.recipe.raters[this.session.getUser._id];
+        this.rated = !!(this.recipe.raters[this.session.getUser._id]);
         this.userRating = this.rated ? this.recipe.raters[this.session.getUser._id] : 0;
 
         let ratingCounter = 0;
@@ -65,10 +70,14 @@ export class RecipeDetailComponent implements OnInit {
 
         this.avgRating /= ratingCounter;
       }
+    }, err => {
+      console.log(`err: ${err}`);
+    });
 
-    }
+  }
 
-
+  ngOnDestroy(): void {
+    this.recipeSub.unsubscribe();
   }
 
   get userIsAdmin(): boolean {
@@ -113,13 +122,17 @@ export class RecipeDetailComponent implements OnInit {
       this.recipe.favoriters = this.recipe.favoriters.filter(uId => uId !== '' + this.session.getUser._id);
     }
 
-    this.recipeApi.favoriteRecipe(this.recipe).subscribe(res => {
+    console.log(`this.recipe: ${JSON.stringify(this.recipe)}`);
+
+    this.recipeApi.favoriteRecipe(this.recipe).subscribe(result => {
       // console.log('res from fav api call: ' + res);
       if (this.favorited) {
         this.toastr.success(`${this.sanitizer.sanitize(SecurityContext.HTML, this.recipe.title)} Has Been Favorited`);
       } else {
         this.toastr.success(`${this.sanitizer.sanitize(SecurityContext.HTML, this.recipe.title)} Has Been Unfavorited`);
       }
+    }, err => {
+      console.log(`err: ${err}`);
     });
   }
 

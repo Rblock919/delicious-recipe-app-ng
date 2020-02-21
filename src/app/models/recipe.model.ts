@@ -2,7 +2,12 @@ export interface IRecipe {
   _id: number;
   title: string;
   producer?: string;
-  ingredients?: string[];
+  ingredients?: [
+    {
+      name: string,
+      amount: string
+    }
+  ];
   preCook?: string[];
   steps?: [
     {

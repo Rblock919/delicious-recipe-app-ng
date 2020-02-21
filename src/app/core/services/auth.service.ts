@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { templateSourceUrl } from '@angular/compiler';
 
 import { IUser, IUserResolved } from '../../models/user.model';
 import { environment } from 'src/environments/environment';
+import { GraphqlService } from './api/graphql.service';
 
 @Injectable(
   // { providedIn: 'root' }
@@ -13,23 +13,25 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
   private uri = environment.path + 'auth';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private gqlService: GraphqlService) { }
 
   signUp(newUser: IUser): Observable<any> {
-    // const options = { headers: new HttpHeaders( { 'Content-Type': '/application/json'} )};
-    return this.httpClient.post(`${this.uri}/signUp`, newUser, {responseType: 'json'});
+    return this.gqlService.signUp(newUser.username, newUser.password);
     // .pipe(catchError(this.handleError('signUp')));
   }
 
   signIn(userInfo: IUser): Observable<any> {
-    return this.httpClient.post(`${this.uri}/signIn`, userInfo, {responseType: 'json'});
+    return this.gqlService.signIn(userInfo.username, userInfo.password);
     // .pipe(catchError(this.handleError('signIn')));
   }
 
   signOut(): Observable<any> {
-    return this.httpClient.get(`${this.uri}/signOut`, {responseType: 'text'});
+    return this.gqlService.signOut();
+    // .pipe(catchError(this.handleError('signOut')));
+    // return this.httpClient.get(`${this.uri}/signOut`, {responseType: 'text'});
   }
 
+  // TODO: handle getUserData using graphql
   getUserData(): Observable<IUserResolved> {
     return this.httpClient.get<IUserResolved>(`${this.uri}/getUserData`, {responseType: 'json'});
   }

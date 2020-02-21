@@ -1,15 +1,12 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpInterceptor } from '@angular/common/http';
 
-import { LoggerService } from '../services/logger.service';
 import { SessionService } from '../services/session.service';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-  constructor(
-    private injector: Injector,
-    private loggerService: LoggerService) { }
+  constructor(private injector: Injector) { }
 
   intercept(req, next) {
     const session = this.injector.get(SessionService);
