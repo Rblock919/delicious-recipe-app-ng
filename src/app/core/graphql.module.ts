@@ -14,7 +14,9 @@ export function createApollo(httpLink: HttpLink) {
       uri,
       withCredentials: true
     }),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      addTypename: false
+    }),
   };
 }
 

@@ -24,7 +24,7 @@ export class RecipeSearchComponent implements OnInit, OnDestroy {
   recipeList: IRecipe[];
   filteredList: IRecipe[];
 
-  userId: number;
+  userId: string;
 
   // For modal purposes
   selectedRecipe: IRecipe;
@@ -92,7 +92,7 @@ export class RecipeSearchComponent implements OnInit, OnDestroy {
       // have to loop through graphQL responses and reverse engineer maps since graphQL doesn't natively support maps
       for (const recipe of result) {
         let tmpRecipe: IRecipe;
-        const tmpMap = new Map<number, number>();
+        const tmpMap = new Map<string, number>();
 
         let counter = 0;
         for (const key of recipe.raters.keys) {

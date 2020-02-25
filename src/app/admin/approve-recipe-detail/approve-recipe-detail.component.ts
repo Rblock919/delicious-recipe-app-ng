@@ -38,7 +38,7 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
   recipeProducer: string;
   pageTitle: any;
   preCookTitle: string;
-  recipeId: number;
+  recipeId: string;
   recipe: IRecipe;
   imageDir: string;
   submitted = false;
@@ -54,7 +54,6 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
               private fb: FormBuilder) { }
 
   ngOnInit() {
-    console.log('in onInit');
     this.recipeId = this.route.snapshot.params.id;
     // console.log('Id in detail comp: ' + this.recipeId);
 
@@ -339,23 +338,23 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
       if (!this.blueApronNutritionFlag) {
         console.log('saving BA form that doesnt provide nutrition info');
         const nutritionControl = this.recipeForm.get('nutrition');
-        nutritionControl.get('fat').patchValue('');
-        nutritionControl.get('carbohydrate').patchValue('');
-        nutritionControl.get('protein').patchValue('');
-        nutritionControl.get('sodium').patchValue('');
-        nutritionControl.get('sugar').patchValue('');
-        nutritionControl.get('saturatedFat').patchValue('');
-        nutritionControl.get('cholesterol').patchValue('');
-        nutritionControl.get('fiber').patchValue('');
+        nutritionControl.get('fat').patchValue(null);
+        nutritionControl.get('carbohydrate').patchValue(null);
+        nutritionControl.get('protein').patchValue(null);
+        nutritionControl.get('sodium').patchValue(null);
+        nutritionControl.get('sugar').patchValue(null);
+        nutritionControl.get('saturatedFat').patchValue(null);
+        nutritionControl.get('cholesterol').patchValue(null);
+        nutritionControl.get('fiber').patchValue(null);
       }
     }
 
     if (this.recipeProducer === 'Home Chef' && this.recipeForm.get('nutrition.sugar').value !== '') {
       const nutritionControl = this.recipeForm.get('nutrition');
-      nutritionControl.get('sugar').patchValue('');
-      nutritionControl.get('saturatedFat').patchValue('');
-      nutritionControl.get('cholesterol').patchValue('');
-      nutritionControl.get('fiber').patchValue('');
+      nutritionControl.get('sugar').patchValue(null);
+      nutritionControl.get('saturatedFat').patchValue(null);
+      nutritionControl.get('cholesterol').patchValue(null);
+      nutritionControl.get('fiber').patchValue(null);
     }
 
     // console.log('recipe form value: ' + JSON.stringify(this.recipeForm.value));
@@ -366,7 +365,10 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
     // formRecipe.nutritionValues = this.recipeForm.get('nutrition').value;
 
     formRecipe.favoriters = [];
-    formRecipe.raters = {} as Map<number, number>;
+    formRecipe.raters = {} as Map<string, number>;
+    this.prepRecipeForSubmit(formRecipe);
+
+    // console.log(`formRecipe: ${JSON.stringify(formRecipe)}`);
 
     // add recipe API call
     this.recipeApiService.addRecipe(formRecipe, this.recipeId).subscribe(result => {
@@ -392,7 +394,6 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
 
   rejectRecipe(): void {
     this.recipeApiService.rejectRecipe(this.recipeId).subscribe((res) => {
-      console.log(`res: ${res}`);
       this.toastr.success('Recipe successfully rejected');
       this.router.navigate(['admin/approve']);
     }, (err) => {
@@ -461,6 +462,23 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
 
   removeStep(id: number): void {
     this.steps.removeAt(id);
+  }
+
+  prepRecipeForSubmit(recipe: any): void {
+    const preCook = [];
+    for (const step of recipe.preCook) {
+      preCook.push(step.body);
+    }
+    recipe.preCook = preCook;
+    recipe.nutrition.calories = +recipe.nutrition.calories;
+    recipe.nutrition.fat = (recipe.nutrition.fat === null) ? null : +recipe.nutrition.fat;
+    recipe.nutrition.carbohydrate = (recipe.nutrition.carbohydrate === null) ? null : +recipe.nutrition.carbohydrate;
+    recipe.nutrition.protein = (recipe.nutrition.protein === null) ? null : +recipe.nutrition.protein;
+    recipe.nutrition.sodium = (recipe.nutrition.sodium === null) ? null : +recipe.nutrition.sodium;
+    recipe.nutrition.saturatedFat = (recipe.nutrition.saturatedFat === null) ? null : +recipe.nutrition.saturatedFat;
+    recipe.nutrition.sugar = (recipe.nutrition.sugar === null) ? null : +recipe.nutrition.sugar;
+    recipe.nutrition.fiber = (recipe.nutrition.fiber === null) ? null : +recipe.nutrition.fiber;
+    recipe.nutrition.cholesterol = (recipe.nutrition.cholesterol === null) ? null : +recipe.nutrition.cholesterol;
   }
 
   addHomeChefValidators(formControl: AbstractControl): void {

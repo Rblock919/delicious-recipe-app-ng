@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
       username: '',
       password: '',
       isAdmin: false,
-      _id: 0
+      _id: '0'
     };
   }
 

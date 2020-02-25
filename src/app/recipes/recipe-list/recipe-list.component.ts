@@ -25,18 +25,18 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   recipeList: IRecipe[];
 
-  // For modal purposes
-  selectedRecipe: IRecipe;
-  rated: boolean;
-  userRating = 0;
-
   sortFilter: string;
   sortDirection: string;
 
   topSelectedFilter = '';
   botSelectedFilter = '';
 
-  userId: number;
+  userId: string;
+
+  // For modal purposes
+  selectedRecipe: IRecipe;
+  rated: boolean;
+  userRating = 0;
 
   constructor(private sessionService: SessionService,
               private apiService: RecipeApiService,
@@ -89,13 +89,12 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
     this.recipeSub = this.apiService.getRecipeList().subscribe(result => {
       // console.log(`RESULT: ${JSON.stringify(result)}`);
-      // const tmp = result as any;
       this.recipeList = [];
 
       // have to loop through graphQL responses and reverse engineer maps since graphQL doesn't natively support maps
       for (const recipe of result) {
         let tmpRecipe: IRecipe;
-        const tmpMap = new Map<number, number>();
+        const tmpMap = new Map<string, number>();
 
         let counter = 0;
         for (const key of recipe.raters.keys) {
@@ -176,7 +175,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   }
 
-  // test all below after implementing GraphQL
   triggerRate($event): void {
     this.selectedRecipe = $event as IRecipe;
     this.rated = !!this.selectedRecipe.raters[this.userId];
@@ -191,9 +189,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.selectedRecipe.raters[this.userId] = this.userRating;
 
     this.apiService.rateRecipe(this.selectedRecipe).subscribe((res) => {
-      console.log(`res: ${res}`);
       const idx = this.recipeList.indexOf(this.selectedRecipe);
-      // re-trigger the input method in the recipe component to update the UI rate
+      // update the userRating to re-trigger the input method in the recipe component to update the UI rate
       this.recipeList[idx].raters[this.userId] = this.userRating;
       this.toastr.success(this.sanitizer.sanitize(SecurityContext.HTML, `${this.selectedRecipe.title} has been successfully rated`));
     }, (err) => {

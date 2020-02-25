@@ -45,7 +45,7 @@ export class EditRecipeListComponent implements OnInit, OnDestroy {
     this.selectedRecipeTitle = recipe.title;
   }
 
-  deleteRecipe(recipeId: number): void {
+  deleteRecipe(recipeId: string): void {
     this.apiService.deleteRecipe(recipeId).subscribe(res => {
       console.log('Res: ' + res);
       this.recipeList = this.recipeList.filter(x => x._id !== recipeId);
