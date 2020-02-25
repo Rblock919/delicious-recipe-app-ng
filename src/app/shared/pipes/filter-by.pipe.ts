@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {IRecipe} from '../../models/recipe.model';
+import { IRecipe } from '../../models/recipe.model';
 
 @Pipe({
-  name: 'filterBy'
+  name: 'filterBy',
 })
 export class FilterByPipe implements PipeTransform {
   topFilter = '';
@@ -22,7 +22,7 @@ export class FilterByPipe implements PipeTransform {
     this.selectedRecipeList = [] as IRecipe[];
 
     if (this.topFilter === 'new') {
-      this.selectedRecipeList = value.slice((value.length - 6), (value.length));
+      this.selectedRecipeList = value.slice(value.length - 6, value.length);
     } else if (this.topFilter === 'hot') {
       let tempList: IRecipe[];
       tempList = value.slice(0);
@@ -56,7 +56,6 @@ export class FilterByPipe implements PipeTransform {
         } else {
           return 1;
         }
-
       });
 
       for (let i = 0; i < 12; i++) {
@@ -66,28 +65,28 @@ export class FilterByPipe implements PipeTransform {
       }
     } else if (this.topFilter === 'fav') {
       this.selectedRecipeList = value.filter(recipe => {
-        return (recipe.favoriters.indexOf('' + this.userId) > -1 );
+        return recipe.favoriters.indexOf('' + this.userId) > -1;
       });
     }
 
     // set selectedRecipeList to value if it wasn't already set above with top filters
-    this.selectedRecipeList = this.topFilter === '' ? value : this.selectedRecipeList;
+    this.selectedRecipeList =
+      this.topFilter === '' ? value : this.selectedRecipeList;
 
     if (this.botFilter === 'Hello Fresh') {
       this.selectedRecipeList = this.selectedRecipeList.filter(recipe => {
-        return (recipe.producer === 'Hello Fresh');
+        return recipe.producer === 'Hello Fresh';
       });
     } else if (this.botFilter === 'Home Chef') {
       this.selectedRecipeList = this.selectedRecipeList.filter(recipe => {
-        return (recipe.producer === 'Home Chef');
+        return recipe.producer === 'Home Chef';
       });
     } else if (this.botFilter === 'Blue Apron') {
       this.selectedRecipeList = this.selectedRecipeList.filter(recipe => {
-        return (recipe.producer === 'Blue Apron');
+        return recipe.producer === 'Blue Apron';
       });
     }
 
     return this.selectedRecipeList;
   }
-
 }

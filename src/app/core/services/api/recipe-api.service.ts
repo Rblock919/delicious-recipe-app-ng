@@ -6,12 +6,13 @@ import { catchError } from 'rxjs/operators';
 import { IRecipe } from '../../../models/recipe.model';
 import { GraphqlService } from './graphql.service';
 
-@Injectable(
-  // { providedIn: 'root' }
-)
+@Injectable()
+// { providedIn: 'root' }
 export class RecipeApiService {
-
-  constructor(private httpClient: HttpClient, private graphQLService: GraphqlService) { }
+  constructor(
+    private httpClient: HttpClient,
+    private graphQLService: GraphqlService
+  ) {}
 
   getRecipeList(): Observable<any> {
     return this.graphQLService.getRecipeList();
@@ -61,5 +62,4 @@ export class RecipeApiService {
       return of(result as T);
     };
   }
-
 }

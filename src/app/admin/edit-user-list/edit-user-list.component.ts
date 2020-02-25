@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import {Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { AdminService } from 'src/app/admin/services/admin.service';
@@ -9,10 +9,9 @@ import { TOASTR_TOKEN, Toastr } from '../../core/services/toastr.service';
 @Component({
   selector: 'app-edit-user-list',
   templateUrl: './edit-user-list.component.html',
-  styleUrls: ['./edit-user-list.component.scss']
+  styleUrls: ['./edit-user-list.component.scss'],
 })
 export class EditUserListComponent implements OnInit, OnDestroy {
-
   private userSub: Subscription;
 
   userList: IUser[];
@@ -20,28 +19,31 @@ export class EditUserListComponent implements OnInit, OnDestroy {
   editedAdminFields: boolean[];
   differentFromOriginal = false;
 
-  constructor(private adminService: AdminService,
-              private route: ActivatedRoute,
-              private router: Router,
-              @Inject(TOASTR_TOKEN) private toastr: Toastr
-              ) { }
+  constructor(
+    private adminService: AdminService,
+    private route: ActivatedRoute,
+    private router: Router,
+    @Inject(TOASTR_TOKEN) private toastr: Toastr
+  ) {}
 
   ngOnInit() {
     this.editedAdminFields = [];
     this.userList = [];
 
-    this.userSub = this.adminService.getUsers().subscribe(result => {
-      this.userList = result;
-      let counter = 0;
-      this.userList.forEach(user => {
-        this.editedAdminFields.push();
-        this.editedAdminFields[counter] = user.isAdmin;
-        counter++;
-      });
-    }, err => {
-      console.log(`err: ${err}`);
-    });
-
+    this.userSub = this.adminService.getUsers().subscribe(
+      result => {
+        this.userList = result;
+        let counter = 0;
+        this.userList.forEach(user => {
+          this.editedAdminFields.push();
+          this.editedAdminFields[counter] = user.isAdmin;
+          counter++;
+        });
+      },
+      err => {
+        console.log(`err: ${err}`);
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -73,27 +75,31 @@ export class EditUserListComponent implements OnInit, OnDestroy {
     this.userList.forEach(user => {
       if (user.isAdmin !== this.editedAdminFields[counter]) {
         this.updatedUserList.push(user);
-        this.updatedUserList[counter2].isAdmin = this.editedAdminFields[counter];
+        this.updatedUserList[counter2].isAdmin = this.editedAdminFields[
+          counter
+        ];
         counter2++;
       }
       counter++;
     });
 
-    this.adminService.updateUsers(this.updatedUserList).subscribe(res => {
-      console.log('res: ' + JSON.stringify(res));
-      this.toastr.success('Users Successfully Updated!');
-      this.differentFromOriginal = false;
-      let counter3 = 0;
-      this.editedAdminFields = [];
-      this.userList.forEach(user => {
-        this.editedAdminFields.push();
-        this.editedAdminFields[counter3] = user.isAdmin;
-        counter3++;
-      });
-    }, err => {
-      console.log('err: ' + JSON.stringify(err));
-      this.toastr.error('Error Updating Users');
-    });
+    this.adminService.updateUsers(this.updatedUserList).subscribe(
+      res => {
+        console.log('res: ' + JSON.stringify(res));
+        this.toastr.success('Users Successfully Updated!');
+        this.differentFromOriginal = false;
+        let counter3 = 0;
+        this.editedAdminFields = [];
+        this.userList.forEach(user => {
+          this.editedAdminFields.push();
+          this.editedAdminFields[counter3] = user.isAdmin;
+          counter3++;
+        });
+      },
+      err => {
+        console.log('err: ' + JSON.stringify(err));
+        this.toastr.error('Error Updating Users');
+      }
+    );
   }
-
 }

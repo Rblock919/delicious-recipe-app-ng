@@ -4,7 +4,7 @@ import {
   Input,
   Inject,
   EventEmitter,
-  Output
+  Output,
 } from '@angular/core';
 
 import { JQ_TOKEN } from '../../core/services/jQuery.service';
@@ -13,7 +13,7 @@ import { IRecipe } from 'src/app/models/recipe.model';
 @Component({
   selector: 'app-recipe',
   templateUrl: './recipe.component.html',
-  styleUrls: ['./recipe.component.scss']
+  styleUrls: ['./recipe.component.scss'],
 })
 export class RecipeComponent implements OnInit {
   private _userRating = 0;
@@ -55,9 +55,8 @@ export class RecipeComponent implements OnInit {
 
   // modalContentID: string;
 
-  constructor(
-    // @Inject(JQ_TOKEN) private $: any
-  ) { }
+  constructor() // @Inject(JQ_TOKEN) private $: any
+  {}
 
   ngOnInit() {
     let favoritersList: string[];
@@ -82,23 +81,22 @@ export class RecipeComponent implements OnInit {
     //   this.avgRating /= ratingCounter;
     //
     // }
-
   }
 
   makeModalId(length: number): string {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     const charactersLength = characters.length;
-    for ( let i = 0; i < length; i++ ) {
-       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
- }
+  }
 
   // ngAfterViewInit() {
-    // const modalButton = '#' + this.recipe._id;
-    // const thisModalContentId = '#' + this.modalContentID;
-    // this.$(modalButton).attr({'data-target': thisModalContentId});
+  // const modalButton = '#' + this.recipe._id;
+  // const thisModalContentId = '#' + this.modalContentID;
+  // this.$(modalButton).attr({'data-target': thisModalContentId});
   // }
 
   // setRating(rating: number): void {
@@ -115,11 +113,14 @@ export class RecipeComponent implements OnInit {
     if (this.favorited) {
       this.recipe.favoriters.push('' + this.userId);
     } else {
-      this.recipe.favoriters = this.recipe.favoriters.filter(uId => uId !== '' + this.userId);
+      this.recipe.favoriters = this.recipe.favoriters.filter(
+        uId => uId !== '' + this.userId
+      );
     }
 
-    this.favoriteEvent.emit({recipe: this.recipe, favoriting: this.favorited});
-
+    this.favoriteEvent.emit({
+      recipe: this.recipe,
+      favoriting: this.favorited,
+    });
   }
-
 }

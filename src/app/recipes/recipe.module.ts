@@ -10,11 +10,9 @@ import { SharedModule } from '../shared/shared.module';
     RecipeRoutingModule,
     ReactiveFormsModule,
     CommonModule,
-    SharedModule
+    SharedModule,
   ],
-  declarations: [
-    RecipeRoutingModule.components
-  ],
-  providers: []
+  declarations: [RecipeRoutingModule.components],
+  providers: [],
 })
-export class RecipeModule { }
+export class RecipeModule {}

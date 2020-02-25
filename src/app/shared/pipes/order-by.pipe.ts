@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {IRecipe} from '../../models/recipe.model';
+import { IRecipe } from '../../models/recipe.model';
 
 @Pipe({
-  name: 'orderBy'
+  name: 'orderBy',
 })
 export class OrderByPipe implements PipeTransform {
   sortFilter = '';
@@ -28,9 +28,10 @@ export class OrderByPipe implements PipeTransform {
 
     if (this.sortDirection === 'up') {
       if (this.sortFilter === 'calories') {
-        this.selectedRecipeList.sort((a, b) => (a.nutritionValues.calories > b.nutritionValues.calories ? 1 : -1));
+        this.selectedRecipeList.sort((a, b) =>
+          a.nutritionValues.calories > b.nutritionValues.calories ? 1 : -1
+        );
       } else if (this.sortFilter === 'rating') {
-
         this.selectedRecipeList.sort((a, b) => {
           let aAvg = 0;
           let bAvg = 0;
@@ -62,16 +63,18 @@ export class OrderByPipe implements PipeTransform {
           } else {
             return -1;
           }
-
         });
       } else if (this.sortFilter === 'title') {
-        this.selectedRecipeList.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));
+        this.selectedRecipeList.sort((a, b) =>
+          a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
+        );
       }
     } else if (this.sortDirection === 'down') {
       if (this.sortFilter === 'calories') {
-        this.selectedRecipeList.sort((a, b) => (a.nutritionValues.calories > b.nutritionValues.calories ? -1 : 1));
+        this.selectedRecipeList.sort((a, b) =>
+          a.nutritionValues.calories > b.nutritionValues.calories ? -1 : 1
+        );
       } else if (this.sortFilter === 'rating') {
-
         this.selectedRecipeList.sort((a, b) => {
           let aAvg = 0;
           let bAvg = 0;
@@ -103,15 +106,14 @@ export class OrderByPipe implements PipeTransform {
           } else {
             return 1;
           }
-
         });
-
       } else if (this.sortFilter === 'title') {
-        this.selectedRecipeList.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? -1 : 1));
+        this.selectedRecipeList.sort((a, b) =>
+          a.title.toLowerCase() > b.title.toLowerCase() ? -1 : 1
+        );
       }
     }
 
     return this.selectedRecipeList;
   }
-
 }

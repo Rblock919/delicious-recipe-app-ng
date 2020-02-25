@@ -8,18 +8,17 @@ import { SessionService } from '../../core/services/session.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
-
   searchString: string;
 
   constructor(
     public session: SessionService,
     @Inject(TOASTR_TOKEN) private toastr: Toastr,
     private auth: AuthService,
-    private router: Router) {
-  }
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.searchString = '';
@@ -27,8 +26,12 @@ export class NavbarComponent implements OnInit {
 
   search(): void {
     if (this.searchString !== '') {
-      console.log('user has actually entered something to search \nSearching...');
-      this.router.navigate(['/recipe/search'], { queryParams: {searchString: this.searchString}});
+      console.log(
+        'user has actually entered something to search \nSearching...'
+      );
+      this.router.navigate(['/recipe/search'], {
+        queryParams: { searchString: this.searchString },
+      });
     } else {
       console.log('nothing to search...');
     }
@@ -39,15 +42,18 @@ export class NavbarComponent implements OnInit {
 
     this.clearSearch();
 
-    this.auth.signOut().subscribe(res => {
-      this.toastr.success('You have successfully logged out');
-      this.router.navigate(['logout']);
-    }, err => {
-      console.error('Error destroying session from backend');
-      this.toastr.error('Error ending session with backend');
-      this.router.navigate(['logout']);
-      // TO-DO: implement logging out of front end and hiding error from user
-    });
+    this.auth.signOut().subscribe(
+      res => {
+        this.toastr.success('You have successfully logged out');
+        this.router.navigate(['logout']);
+      },
+      err => {
+        console.error('Error destroying session from backend');
+        this.toastr.error('Error ending session with backend');
+        this.router.navigate(['logout']);
+        // TO-DO: implement logging out of front end and hiding error from user
+      }
+    );
   }
 
   navigateHome(): void {
@@ -69,5 +75,4 @@ export class NavbarComponent implements OnInit {
   clearSearch(): void {
     this.searchString = '';
   }
-
 }

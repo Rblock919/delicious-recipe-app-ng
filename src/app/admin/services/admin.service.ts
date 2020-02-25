@@ -5,14 +5,15 @@ import { Observable, of } from 'rxjs';
 import { IUser } from '../../models/user.model';
 import { GraphqlService } from '../../core/services/api/graphql.service';
 
-@Injectable(
-   // { providedIn: AdminModule }
-  )
+@Injectable()
+// { providedIn: AdminModule }
 export class AdminService {
+  constructor(
+    private httpClient: HttpClient,
+    private graphQLService: GraphqlService
+  ) {}
 
-  constructor(private httpClient: HttpClient, private graphQLService: GraphqlService) { }
-
-  getUsers(): Observable<any>  {
+  getUsers(): Observable<any> {
     return this.graphQLService.getUserList();
   }
 
@@ -34,5 +35,4 @@ export class AdminService {
       return of(result as T);
     };
   }
-
 }

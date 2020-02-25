@@ -20,29 +20,33 @@ const routes: Routes = [
     path: 'recipe',
     loadChildren: 'src/app/recipes/recipe.module#RecipeModule',
     canActivate: [RouteGuard],
-    data: { preload: true }
+    data: { preload: true },
   },
   {
     path: 'admin',
     loadChildren: 'src/app/admin/admin.module#AdminModule',
     canLoad: [AdminGuard],
     canActivate: [AdminGuard],
-    data: { preload: false }
+    data: { preload: false },
   },
-  { path: 'register',
+  {
+    path: 'register',
     component: RegisterComponent,
-    canActivate: [RouteGuard], canDeactivate: [RouteGuard],
-    data: { context: 'register' }
+    canActivate: [RouteGuard],
+    canDeactivate: [RouteGuard],
+    data: { context: 'register' },
   },
   { path: 'login', component: LoginComponent, canActivate: [IndexGuard] },
   { path: 'logout', component: LogoutComponent },
-  { path: '', pathMatch: 'full', redirectTo: 'index'},
+  { path: '', pathMatch: 'full', redirectTo: 'index' },
   { path: 'error', component: ErrorComponent },
-  { path: '**', component: PageNotFoundComponent }
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {preloadingStrategy: SelectiveStrategy})],
-  exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes, { preloadingStrategy: SelectiveStrategy }),
+  ],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -8,18 +8,12 @@ import { UnapprovedRecipeResolverService } from './services/unapproved-recipe-re
 import { AdminRoutingModule } from './admin-routing.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    AdminRoutingModule,
-    ReactiveFormsModule
-  ],
-  declarations: [
-    AdminRoutingModule.components
-  ],
+  imports: [CommonModule, AdminRoutingModule, ReactiveFormsModule],
+  declarations: [AdminRoutingModule.components],
   providers: [
     AdminService,
     UserResolverService,
-    UnapprovedRecipeResolverService
-  ]
+    UnapprovedRecipeResolverService,
+  ],
 })
-export class AdminModule { }
+export class AdminModule {}

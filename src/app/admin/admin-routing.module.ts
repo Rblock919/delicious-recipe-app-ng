@@ -13,7 +13,7 @@ const routes: Routes = [
   {
     path: 'editRecipeList',
     component: EditRecipeListComponent,
-    data: { context: 'edit' }
+    data: { context: 'edit' },
   },
   {
     path: 'approve',
@@ -29,21 +29,19 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/home'
-  }
+    redirectTo: '/home',
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
 export class AdminRoutingModule {
   static components = [
     ApproveRecipeDetailComponent,
     ApproveRecipeListComponent,
     EditRecipeListComponent,
-    EditUserListComponent
+    EditUserListComponent,
   ];
 }

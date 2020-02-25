@@ -20,10 +20,7 @@ const toastr: Toastr = window['toastr'];
 const jQuery = window['$'];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    HttpClientModule
-  ],
+  imports: [CommonModule, HttpClientModule],
   providers: [
     RecipeApiService,
     GraphqlService,
@@ -36,20 +33,20 @@ const jQuery = window['$'];
     RouteGuard,
     {
       provide: TOASTR_TOKEN,
-      useValue: toastr
+      useValue: toastr,
     },
     {
       provide: JQ_TOKEN,
-      useValue: jQuery
+      useValue: jQuery,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
-      multi: true
-    }
+      multi: true,
+    },
   ],
   declarations: [],
-  exports: []
+  exports: [],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

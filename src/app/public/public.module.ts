@@ -14,12 +14,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ErrorComponent } from './error/error.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule,
-    FormsModule,
-    RouterModule
-  ],
+  imports: [CommonModule, SharedModule, FormsModule, RouterModule],
   declarations: [
     LoginComponent,
     LogoutComponent,
@@ -28,7 +23,7 @@ import { ErrorComponent } from './error/error.component';
     UserHomeComponent,
     SplashPageComponent,
     NavbarComponent,
-    ErrorComponent
+    ErrorComponent,
   ],
   exports: [
     LoginComponent,
@@ -38,7 +33,7 @@ import { ErrorComponent } from './error/error.component';
     UserHomeComponent,
     SplashPageComponent,
     NavbarComponent,
-    ErrorComponent
-  ]
+    ErrorComponent,
+  ],
 })
-export class PublicModule { }
+export class PublicModule {}

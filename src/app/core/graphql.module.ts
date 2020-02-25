@@ -12,10 +12,10 @@ export function createApollo(httpLink: HttpLink) {
   return {
     link: httpLink.create({
       uri,
-      withCredentials: true
+      withCredentials: true,
     }),
     cache: new InMemoryCache({
-      addTypename: false
+      addTypename: false,
     }),
   };
 }

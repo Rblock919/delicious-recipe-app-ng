@@ -8,23 +8,21 @@ import { OrderByPipe } from './pipes/order-by.pipe';
 import { FilterByPipe } from './pipes/filter-by.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   providers: [],
   declarations: [
     StarComponent,
     CollapsibleWellComponent,
     IngredientsPipe,
     OrderByPipe,
-    FilterByPipe
+    FilterByPipe,
   ],
   exports: [
     StarComponent,
     CollapsibleWellComponent,
     IngredientsPipe,
     OrderByPipe,
-    FilterByPipe
-  ]
+    FilterByPipe,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

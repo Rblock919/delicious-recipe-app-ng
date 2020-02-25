@@ -14,4 +14,3 @@ export interface IUsersResolved {
   users: IUser[];
   error?: any;
 }
-

@@ -4,27 +4,27 @@ export interface IRecipe {
   producer?: string;
   ingredients?: [
     {
-      name: string,
-      amount: string
+      name: string;
+      amount: string;
     }
   ];
   preCook?: string[];
   steps?: [
     {
-    name: string,
-    body: string,
+      name: string;
+      body: string;
     }
   ];
   nutritionValues?: {
-    calories: number,
-    fat?: number,
-    saturatedFat?: number,
-    carbohydrate?: number,
-    sugar?: number,
-    fiber?: number,
-    protein?: number,
-    cholesterol?: number,
-    sodium?: number
+    calories: number;
+    fat?: number;
+    saturatedFat?: number;
+    carbohydrate?: number;
+    sugar?: number;
+    fiber?: number;
+    protein?: number;
+    cholesterol?: number;
+    sodium?: number;
   };
   imgDir?: string;
   favoriters?: string[];
@@ -51,8 +51,8 @@ export interface IRecipeGQL {
   };
   favoriters?: string[];
   raters?: {
-    keys: string[],
-    values: number[]
+    keys: string[];
+    values: number[];
   };
   imgDir?: string;
 }

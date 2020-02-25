@@ -7,13 +7,15 @@ import { IUser, IUserResolved } from '../../models/user.model';
 import { environment } from 'src/environments/environment';
 import { GraphqlService } from './api/graphql.service';
 
-@Injectable(
-  // { providedIn: 'root' }
-)
+@Injectable()
+// { providedIn: 'root' }
 export class AuthService {
   private uri = environment.path + 'auth';
 
-  constructor(private httpClient: HttpClient, private gqlService: GraphqlService) { }
+  constructor(
+    private httpClient: HttpClient,
+    private gqlService: GraphqlService
+  ) {}
 
   signUp(newUser: IUser): Observable<any> {
     return this.gqlService.signUp(newUser.username, newUser.password);
@@ -33,7 +35,9 @@ export class AuthService {
 
   // TODO: handle getUserData using graphql
   getUserData(): Observable<IUserResolved> {
-    return this.httpClient.get<IUserResolved>(`${this.uri}/getUserData`, {responseType: 'json'});
+    return this.httpClient.get<IUserResolved>(`${this.uri}/getUserData`, {
+      responseType: 'json',
+    });
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

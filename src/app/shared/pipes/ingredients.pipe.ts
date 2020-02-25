@@ -1,10 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'ingredientsPipe'
+  name: 'ingredientsPipe',
 })
 export class IngredientsPipe implements PipeTransform {
-
   transform(value: any): string[][] {
     const newArray: string[][] = [];
     let counter = 0;
@@ -20,5 +19,4 @@ export class IngredientsPipe implements PipeTransform {
 
     return newArray;
   }
-
 }

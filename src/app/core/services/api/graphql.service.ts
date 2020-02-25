@@ -10,12 +10,10 @@ import { IUser } from '../../../models/user.model';
 import * as GqlQueries from '../../../models/gql.queries';
 import * as GqlMutations from '../../../models/gql.mutations';
 
-@Injectable(
-  // { providedIn: 'root' }
-)
+@Injectable()
+// { providedIn: 'root' }
 export class GraphqlService {
-
-  constructor(private httpClient: HttpClient, private apollo: Apollo) { }
+  constructor(private httpClient: HttpClient, private apollo: Apollo) {}
 
   // TODO: modularize some of this code
   // TODO: use IApolloResponse where possible
@@ -23,11 +21,13 @@ export class GraphqlService {
     return this.apollo.mutate({
       mutation: GqlMutations.submitForApprovalMutation,
       variables: {
-        recipe
+        recipe,
       },
-      refetchQueries: [{
-        query: GqlQueries.approvalListQuery
-      }]
+      refetchQueries: [
+        {
+          query: GqlQueries.approvalListQuery,
+        },
+      ],
     });
   }
 
@@ -49,41 +49,44 @@ export class GraphqlService {
       mutation: GqlMutations.updateRecipeMutation,
       variables: {
         recipeId: recipe._id,
-        recipe
+        recipe,
       },
       refetchQueries: [
         { query: GqlQueries.recipeListQuery },
         { query: GqlQueries.recipeEditListQuery },
-        { query: GqlQueries.recipeQuery, variables: {recipeId: recipe._id} }
-      ]
+        { query: GqlQueries.recipeQuery, variables: { recipeId: recipe._id } },
+      ],
     });
-
   }
 
   approveRecipe(id: string, recipe: IRecipe): Observable<any> {
-    return this.apollo.mutate<any>({
-      mutation: GqlMutations.addRecipeMutation,
-      variables: {
-        approvalId: id,
-        recipe
-      },
-      refetchQueries: [
-        { query: GqlQueries.approvalListQuery },
-        { query: GqlQueries.recipeEditListQuery },
-        { query: GqlQueries.recipeListQuery }
-      ]
-    }).pipe(map(result => result.data.addRecipe));
+    return this.apollo
+      .mutate<any>({
+        mutation: GqlMutations.addRecipeMutation,
+        variables: {
+          approvalId: id,
+          recipe,
+        },
+        refetchQueries: [
+          { query: GqlQueries.approvalListQuery },
+          { query: GqlQueries.recipeEditListQuery },
+          { query: GqlQueries.recipeListQuery },
+        ],
+      })
+      .pipe(map(result => result.data.addRecipe));
   }
 
   rejectRecipe(id: string): Observable<any> {
     return this.apollo.mutate({
       mutation: GqlMutations.rejectRecipeMutation,
       variables: {
-        recipeId: id
+        recipeId: id,
       },
-      refetchQueries: [{
-        query: GqlQueries.approvalListQuery
-      }]
+      refetchQueries: [
+        {
+          query: GqlQueries.approvalListQuery,
+        },
+      ],
     });
   }
 
@@ -91,34 +94,40 @@ export class GraphqlService {
     return this.apollo.mutate({
       mutation: GqlMutations.deleteRecipeMutation,
       variables: {
-        recipeId: id
+        recipeId: id,
       },
       refetchQueries: [
         { query: GqlQueries.recipeListQuery },
-        { query: GqlQueries.recipeEditListQuery }
-      ]
+        { query: GqlQueries.recipeEditListQuery },
+      ],
     });
   }
 
   getRecipeList(): Observable<IApolloResponse> {
-    return this.apollo.watchQuery<any>({
-      query: GqlQueries.recipeListQuery
-    }).valueChanges.pipe(map(result => result.data.recipes));
+    return this.apollo
+      .watchQuery<any>({
+        query: GqlQueries.recipeListQuery,
+      })
+      .valueChanges.pipe(map(result => result.data.recipes));
   }
 
   getRecipeEditList(): Observable<IApolloResponse> {
-    return this.apollo.watchQuery<any>({
-      query: GqlQueries.recipeEditListQuery
-    }).valueChanges.pipe(map(result => result.data.recipes));
+    return this.apollo
+      .watchQuery<any>({
+        query: GqlQueries.recipeEditListQuery,
+      })
+      .valueChanges.pipe(map(result => result.data.recipes));
   }
 
   getRecipe(id: string): Observable<IApolloResponse> {
-    return this.apollo.watchQuery<any>({
-      query: GqlQueries.recipeQuery,
-      variables: {
-        recipeId: id
-      }
-    }).valueChanges.pipe(map(result => result.data.recipe));
+    return this.apollo
+      .watchQuery<any>({
+        query: GqlQueries.recipeQuery,
+        variables: {
+          recipeId: id,
+        },
+      })
+      .valueChanges.pipe(map(result => result.data.recipe));
   }
 
   updateUsers(users: IUser[]): Observable<any> {
@@ -133,45 +142,55 @@ export class GraphqlService {
       mutation: GqlMutations.updateUsersMutation,
       variables: {
         ids: idArr,
-        isAdmins: isAdminArr
+        isAdmins: isAdminArr,
       },
-      refetchQueries: [{query: GqlQueries.userListQuery}]
+      refetchQueries: [{ query: GqlQueries.userListQuery }],
     });
   }
 
   getUserList(): Observable<IApolloResponse> {
-    return this.apollo.watchQuery<any>({
-      query: GqlQueries.userListQuery
-    }).valueChanges.pipe(map(result => result.data.users));
+    return this.apollo
+      .watchQuery<any>({
+        query: GqlQueries.userListQuery,
+      })
+      .valueChanges.pipe(map(result => result.data.users));
   }
 
   getApprovalList(): Observable<IApolloResponse> {
-    return this.apollo.watchQuery<any>({
-      query: GqlQueries.approvalListQuery
-    }).valueChanges.pipe(map(result => result.data.unapprovedRecipes));
+    return this.apollo
+      .watchQuery<any>({
+        query: GqlQueries.approvalListQuery,
+      })
+      .valueChanges.pipe(map(result => result.data.unapprovedRecipes));
   }
 
   getApprovalById(id: string): Observable<IApolloResponse> {
-    return this.apollo.watchQuery<any>({
-      query: GqlQueries.approvalQuery,
-      variables: {
-        recipeId: id
-      }
-    }).valueChanges.pipe(map(result => result.data.unapprovedRecipe));
+    return this.apollo
+      .watchQuery<any>({
+        query: GqlQueries.approvalQuery,
+        variables: {
+          recipeId: id,
+        },
+      })
+      .valueChanges.pipe(map(result => result.data.unapprovedRecipe));
   }
 
-  rateRecipe(id: string, ratersKeys: string[], ratersValues: string[]): Observable<any> {
+  rateRecipe(
+    id: string,
+    ratersKeys: string[],
+    ratersValues: string[]
+  ): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: GqlMutations.rateMutation,
       refetchQueries: [
         { query: GqlQueries.recipeListQuery },
-        { query: GqlQueries.recipeQuery, variables: {recipeId: id} }
+        { query: GqlQueries.recipeQuery, variables: { recipeId: id } },
       ],
       variables: {
         recipeId: id,
         ratersKeys,
-        ratersValues
-      }
+        ratersValues,
+      },
     });
   }
 
@@ -180,39 +199,42 @@ export class GraphqlService {
       mutation: GqlMutations.favoriteMutation,
       refetchQueries: [
         { query: GqlQueries.recipeListQuery },
-        { query: GqlQueries.recipeQuery, variables: {recipeId: id} }
-        ],
+        { query: GqlQueries.recipeQuery, variables: { recipeId: id } },
+      ],
       variables: {
         recipeId: id,
-        favoriters
-      }
+        favoriters,
+      },
     });
   }
 
   signIn(username: string, password: string): Observable<any> {
-    return this.apollo.mutate<any>({
-      mutation: GqlMutations.signInMutation,
-      variables: {
-        username,
-        password
-      }
-    }).pipe(map(result => result.data.signIn));
+    return this.apollo
+      .mutate<any>({
+        mutation: GqlMutations.signInMutation,
+        variables: {
+          username,
+          password,
+        },
+      })
+      .pipe(map(result => result.data.signIn));
   }
 
   signUp(username: string, password: string): Observable<any> {
-    return this.apollo.mutate<any>({
-      mutation: GqlMutations.signUpMutation,
-      variables: {
-        username,
-        password
-      }
-    }).pipe(map(result => result.data.signUp));
+    return this.apollo
+      .mutate<any>({
+        mutation: GqlMutations.signUpMutation,
+        variables: {
+          username,
+          password,
+        },
+      })
+      .pipe(map(result => result.data.signUp));
   }
 
   signOut(): Observable<any> {
     return this.apollo.watchQuery<any>({
-      query: GqlQueries.signOutQuery
+      query: GqlQueries.signOutQuery,
     }).valueChanges;
   }
-
 }

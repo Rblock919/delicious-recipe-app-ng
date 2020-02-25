@@ -15,12 +15,10 @@ import { GraphQLModule } from './core/graphql.module';
     CoreModule,
     SharedModule,
     PublicModule,
-    GraphQLModule
+    GraphQLModule,
   ],
   providers: [],
-  declarations: [
-    AppComponent
-  ],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

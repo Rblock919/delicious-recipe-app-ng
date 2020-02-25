@@ -4,16 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { IUser } from '../../models/user.model';
 import { Observable } from 'rxjs';
 
-@Injectable(
-  // { providedIn: 'root' }
-)
+@Injectable()
+// { providedIn: 'root' }
 export class SessionService {
-
   private admin = false;
   userData: IUser;
   private redirectUrl: string;
 
-  constructor() { }
+  constructor() {}
 
   logout() {
     if (localStorage.getItem('token')) {
@@ -62,5 +60,4 @@ export class SessionService {
   get isAuthenticated() {
     return !!localStorage.getItem('token');
   }
-
 }

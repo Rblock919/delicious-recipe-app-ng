@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 
-@Injectable(
-  // { providedIn: 'root' }
-)
+@Injectable()
+// { providedIn: 'root' }
 export class LoggerService {
-
-  constructor() { }
+  constructor() {}
 
   consoleLog(message: string): void {
     console.log(message);
@@ -22,5 +20,4 @@ export class LoggerService {
   fileError(message: string): void {
     // TODO: implement logging to an error file
   }
-
 }

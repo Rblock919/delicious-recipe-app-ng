@@ -9,10 +9,9 @@ import { TOASTR_TOKEN, Toastr } from '../../core/services/toastr.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-
   userInfo: IUser;
   confirmPassword: string;
   passwordMessage: string;
@@ -23,14 +22,15 @@ export class RegisterComponent implements OnInit {
     private auth: AuthService,
     @Inject(TOASTR_TOKEN) private toastr: Toastr,
     private router: Router,
-    private sessionService: SessionService) { }
+    private sessionService: SessionService
+  ) {}
 
   ngOnInit() {
     this.userInfo = {
       username: '',
-      password:  '',
+      password: '',
       isAdmin: false,
-      _id: '0'
+      _id: '0',
     };
   }
 
@@ -41,30 +41,30 @@ export class RegisterComponent implements OnInit {
       return;
     } else {
       this.passwordMessage = '';
-      this.auth.signUp(this.userInfo).subscribe(res => {
-        this.submitted = true;
+      this.auth.signUp(this.userInfo).subscribe(
+        res => {
+          this.submitted = true;
 
-        if (!res) {
-          console.error('Error creating new user');
-        } else {
-          this.sessionService.setUser(res.user as IUser);
-          localStorage.setItem('token', res.token);
-          this.toastr.success('Profile Successfully Created');
-          this.router.navigate(['home']);
+          if (!res) {
+            console.error('Error creating new user');
+          } else {
+            this.sessionService.setUser(res.user as IUser);
+            localStorage.setItem('token', res.token);
+            this.toastr.success('Profile Successfully Created');
+            this.router.navigate(['home']);
+          }
+        },
+        err => {
+          console.error('Err: ' + JSON.stringify(err));
+          this.message = err.error.ErrMessage;
+          this.toastr.error(err.error.ErrMessage);
         }
-      },
-      err => {
-        console.error('Err: ' + JSON.stringify(err));
-        this.message = err.error.ErrMessage;
-        this.toastr.error(err.error.ErrMessage);
-      });
+      );
     }
-
   }
 
   clearMessage(): void {
     this.message = '';
     this.passwordMessage = '';
   }
-
 }

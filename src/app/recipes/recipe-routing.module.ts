@@ -14,16 +14,16 @@ const routes: Routes = [
   {
     path: 'list',
     component: RecipeListComponent,
-    data: { context: 'list' }
+    data: { context: 'list' },
   },
   {
     path: 'submitted',
-    component: SubmittedComponent
+    component: SubmittedComponent,
   },
   {
     path: 'search',
     component: RecipeSearchComponent,
-    data: { context: 'list' }
+    data: { context: 'list' },
   },
   {
     path: ':id',
@@ -33,21 +33,19 @@ const routes: Routes = [
     path: ':id/edit',
     component: EditRecipeComponent,
     canDeactivate: [RouteGuard],
-    data: { context: 'editRecipe' }
+    data: { context: 'editRecipe' },
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'list'
-  }
+    redirectTo: 'list',
+  },
 ];
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
 export class RecipeRoutingModule {
   static components = [
@@ -56,6 +54,6 @@ export class RecipeRoutingModule {
     RecipeListComponent,
     EditRecipeComponent,
     RecipeSearchComponent,
-    SubmittedComponent
+    SubmittedComponent,
   ];
 }
