@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
       username: '',
       password:  '',
       isAdmin: false,
-      _id: 0
+      _id: '0'
     };
   }
 

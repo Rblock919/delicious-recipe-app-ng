@@ -14,37 +14,22 @@ export const signInMutation = gql`
 `;
 
 export const submitForApprovalMutation = gql`
-  mutation submitForApproval($title: String!, $producer: String!, $ingredientnames: [String]!, $ingredientamounts: [String]!,
-  $preCook: [String], $stepnames: [String]!, $stepbodies: [String]!, $imgDir: String!, $calories: Int!, $fat: Int, $saturatedFat: Float,
-  $carbohydrate: Int, $sugar: Int, $fiber: Int, $protein: Int, $cholesterol: Int, $sodium: Int) {
-    submitForApproval(title: $title, producer: $producer, ingredientnames: $ingredientnames, ingredientamounts: $ingredientamounts,
-    preCook: $preCook, stepnames: $stepnames, stepbodies: $stepbodies, imgDir: $imgDir, calories: $calories, fat: $fat,
-    saturatedFat: $saturatedFat, carbohydrate: $carbohydrate, sugar: $sugar, fiber: $fiber, protein: $protein, cholesterol: $cholesterol,
-    sodium: $sodium)
+  mutation submitForApproval($recipe: inRecipe) {
+    submitForApproval(recipe: $recipe)
   }
 `;
 
 export const addRecipeMutation = gql`
-  mutation addRecipe($approvalId: String!, $title: String!, $producer: String!, $ingredientnames: [String]!, $ingredientamounts: [String]!,
-    $preCook: [String], $stepnames: [String]!, $stepbodies: [String]!, $imgDir: String!, $calories: Int!, $fat: Int, $saturatedFat: Float,
-    $carbohydrate: Int, $sugar: Int, $fiber: Int, $protein: Int, $cholesterol: Int, $sodium: Int) {
-    addRecipe(approvalId: $approvalId, title: $title, producer: $producer, ingredientnames: $ingredientnames, ingredientamounts: $ingredientamounts,
-      preCook: $preCook, stepnames: $stepnames, stepbodies: $stepbodies, imgDir: $imgDir, calories: $calories, fat: $fat,
-      saturatedFat: $saturatedFat, carbohydrate: $carbohydrate, sugar: $sugar, fiber: $fiber, protein: $protein, cholesterol: $cholesterol,
-      sodium: $sodium) {
+  mutation addRecipe($approvalId: String!, $recipe: inRecipe) {
+    addRecipe(approvalId: $approvalId, recipe: $recipe) {
       id
     }
   }
 `;
 
 export const updateRecipeMutation = gql`
-    mutation updateRecipe($recipeId: String!, $title: String!, $producer: String!, $ingredientnames: [String]!, $ingredientamounts: [String]!,
-      $preCook: [String], $stepnames: [String]!, $stepbodies: [String]!, $imgDir: String!, $calories: Int!, $fat: Int, $saturatedFat: Float,
-      $carbohydrate: Int, $sugar: Int, $fiber: Int, $protein: Int, $cholesterol: Int, $sodium: Int) {
-      updateRecipe(recipeId: $recipeId, title: $title, producer: $producer, ingredientnames: $ingredientnames, ingredientamounts: $ingredientamounts,
-        preCook: $preCook, stepnames: $stepnames, stepbodies: $stepbodies, imgDir: $imgDir, calories: $calories, fat: $fat,
-        saturatedFat: $saturatedFat, carbohydrate: $carbohydrate, sugar: $sugar, fiber: $fiber, protein: $protein, cholesterol: $cholesterol,
-        sodium: $sodium)
+    mutation updateRecipe($recipeId: String!, $recipe: inRecipe) {
+      updateRecipe(recipeId: $recipeId, recipe: $recipe)
     }
 `;
 

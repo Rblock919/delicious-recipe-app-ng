@@ -206,39 +206,41 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
       if (!this.blueApronNutritionFlag) {
         console.log('saving BA form that doesnt provide nutrition info');
         const nutritionControl = this.recipeForm.get('nutrition');
-        nutritionControl.get('fat').patchValue('');
-        nutritionControl.get('carbohydrate').patchValue('');
-        nutritionControl.get('protein').patchValue('');
-        nutritionControl.get('sodium').patchValue('');
-        nutritionControl.get('sugar').patchValue('');
-        nutritionControl.get('saturatedFat').patchValue('');
-        nutritionControl.get('cholesterol').patchValue('');
-        nutritionControl.get('fiber').patchValue('');
+        nutritionControl.get('fat').patchValue(null);
+        nutritionControl.get('carbohydrate').patchValue(null);
+        nutritionControl.get('protein').patchValue(null);
+        nutritionControl.get('sodium').patchValue(null);
+        nutritionControl.get('sugar').patchValue(null);
+        nutritionControl.get('saturatedFat').patchValue(null);
+        nutritionControl.get('cholesterol').patchValue(null);
+        nutritionControl.get('fiber').patchValue(null);
       }
     }
 
     // TODO: implement a better system of checking for extra nutrition info than just checking sugar
-    if (this.recipeProducer === 'Home Chef' && this.recipeForm.get('nutrition.sugar').value !== '') {
+    // if (this.recipeProducer === 'Home Chef' && this.recipeForm.get('nutrition.sugar').value !== '') {
+    if (this.recipeProducer === 'Home Chef') {
       const nutritionControl = this.recipeForm.get('nutrition');
-      nutritionControl.get('sugar').patchValue('');
-      nutritionControl.get('saturatedFat').patchValue('');
-      nutritionControl.get('cholesterol').patchValue('');
-      nutritionControl.get('fiber').patchValue('');
+      nutritionControl.get('sugar').patchValue(null);
+      nutritionControl.get('saturatedFat').patchValue(null);
+      nutritionControl.get('cholesterol').patchValue(null);
+      nutritionControl.get('fiber').patchValue(null);
     }
 
     // console.log('recipe form value: ' + JSON.stringify(this.recipeForm.value));
     // return;
 
-    let formRecipe: IRecipe;
-    formRecipe = this.recipeForm.value;
+    const formRecipe = this.recipeForm.value as IRecipe;
+
+    this.prepRecipeForSubmit(formRecipe);
+    // console.log(`formRecipe: ${JSON.stringify(formRecipe)}`);
 
 
     // user is adding new recipe
     if (this.id === '0') {
       formRecipe.favoriters = [];
-      formRecipe.raters = {} as Map<number, number>;
+      formRecipe.raters = {} as Map<string, number>;
       this.apiService.submitRecipeForApproval(formRecipe).subscribe(res => {
-        // console.log('response: ' + res.id);
         this.submitted = true;
         this.toastr.success('Recipe Submitted for Approval!');
         this.router.navigate(['/recipe/submitted']);
@@ -249,11 +251,22 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
 
     } else { // user is editing current recipe
 
+      const tmpMap = new Map<string, number>();
+      const tmpRecipe = this.recipe as any;
+
+      let counter = 0;
+      for (const key of tmpRecipe.raters.keys) {
+        tmpMap[key] = tmpRecipe.raters.values[counter];
+        counter++;
+      }
+
+      this.recipe.raters = tmpMap;
+
       formRecipe._id = this.id;
       formRecipe.favoriters = this.recipe.favoriters;
       formRecipe.raters = this.recipe.raters;
+      console.log(`formRecipe: ${JSON.stringify(formRecipe)}`);
       this.apiService.updateRecipe(formRecipe).subscribe(res => {
-        console.log('res on updating: ' + res);
         this.submitted = true;
         this.toastr.success('Recipe Successfully Updated!');
         this.router.navigate(['recipe', this.id]);
@@ -358,6 +371,23 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
 
     }
 
+  }
+
+  prepRecipeForSubmit(recipe: any): void {
+    const preCook = [];
+    for (const step of recipe.preCook) {
+      preCook.push(step.body);
+    }
+    recipe.preCook = preCook;
+    recipe.nutrition.calories = +recipe.nutrition.calories;
+    recipe.nutrition.fat = (recipe.nutrition.fat === null) ? null : +recipe.nutrition.fat;
+    recipe.nutrition.carbohydrate = (recipe.nutrition.carbohydrate === null) ? null : +recipe.nutrition.carbohydrate;
+    recipe.nutrition.protein = (recipe.nutrition.protein === null) ? null : +recipe.nutrition.protein;
+    recipe.nutrition.sodium = (recipe.nutrition.sodium === null) ? null : +recipe.nutrition.sodium;
+    recipe.nutrition.saturatedFat = (recipe.nutrition.saturatedFat === null) ? null : +recipe.nutrition.saturatedFat;
+    recipe.nutrition.sugar = (recipe.nutrition.sugar === null) ? null : +recipe.nutrition.sugar;
+    recipe.nutrition.fiber = (recipe.nutrition.fiber === null) ? null : +recipe.nutrition.fiber;
+    recipe.nutrition.cholesterol = (recipe.nutrition.cholesterol === null) ? null : +recipe.nutrition.cholesterol;
   }
 
   private markFormGroupTouched(formGroup: FormGroup): void {

@@ -21,38 +21,38 @@ export class RecipeApiService {
     return this.graphQLService.getRecipeEditList();
   }
 
-  getRecipe(recipeId: number): Observable<any> {
-    return this.graphQLService.getRecipe(`${recipeId}`);
+  getRecipe(recipeId: string): Observable<any> {
+    return this.graphQLService.getRecipe(recipeId);
   }
 
   submitRecipeForApproval(recipe: IRecipe): Observable<any> {
     return this.graphQLService.submitForApproval(recipe);
   }
 
-  addRecipe(recipe: IRecipe, approvalId: number): Observable<any> {
-    return this.graphQLService.approveRecipe(`${approvalId}`, recipe);
+  addRecipe(recipe: IRecipe, approvalId: string): Observable<any> {
+    return this.graphQLService.approveRecipe(approvalId, recipe);
   }
 
   updateRecipe(recipe: IRecipe): Observable<any> {
     return this.graphQLService.updateRecipe(recipe);
   }
 
-  deleteRecipe(recipeId: number): Observable<any> {
-    return this.graphQLService.deleteRecipe(`${recipeId}`);
+  deleteRecipe(recipeId: string): Observable<any> {
+    return this.graphQLService.deleteRecipe(recipeId);
   }
 
-  rejectRecipe(recipeId: number): Observable<any> {
-    return this.graphQLService.rejectRecipe(`${recipeId}`);
+  rejectRecipe(recipeId: string): Observable<any> {
+    return this.graphQLService.rejectRecipe(recipeId);
   }
 
   favoriteRecipe(recipe: IRecipe): Observable<any> {
-    return this.graphQLService.favoriteRecipe(`${recipe._id}`, recipe.favoriters);
+    return this.graphQLService.favoriteRecipe(recipe._id, recipe.favoriters);
   }
 
   rateRecipe(recipe: IRecipe): Observable<any> {
     const ratersKeys = Object.keys(recipe.raters).map(String);
     const ratersValues = Object.values(recipe.raters).map(String);
-    return this.graphQLService.rateRecipe(`${recipe._id}`, ratersKeys, ratersValues);
+    return this.graphQLService.rateRecipe(recipe._id, ratersKeys, ratersValues);
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

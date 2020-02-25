@@ -19,48 +19,11 @@ export class GraphqlService {
 
   // TODO: modularize some of this code
   // TODO: use IApolloResponse where possible
-  submitForApproval(recipe: any): Observable<any> {
-    console.log(`recipe: ${JSON.stringify(recipe)}`);
-    const ingredientnames = [];
-    const ingredientamounts = [];
-    const stepnames = [];
-    const stepbodies = [];
-    const preCook = [];
-    for (const step of recipe.steps) {
-      stepnames.push(step.name);
-      stepbodies.push(step.body);
-    }
-    for (const ingredient of recipe.ingredients) {
-      ingredientnames.push(ingredient.name);
-      ingredientamounts.push(ingredient.amount);
-    }
-    for (const step of recipe.preCook) {
-      preCook.push(step.body);
-    }
-
-    // return of(null);
-
+  submitForApproval(recipe: IRecipe): Observable<any> {
     return this.apollo.mutate({
       mutation: GqlMutations.submitForApprovalMutation,
       variables: {
-        title: recipe.title,
-        producer: recipe.producer,
-        ingredientnames,
-        ingredientamounts,
-        preCook,
-        stepnames,
-        stepbodies,
-        imgDir: recipe.imgDir,
-        calories: +recipe.nutrition.calories,
-        // TODO: possibly make sure values that weren't provided are assigned as a proper value before getting sent to back-end
-        carbohydrate: +recipe.nutrition.carbohydrate,
-        fat: +recipe.nutrition.fat,
-        protein: +recipe.nutrition.protein,
-        saturatedFat: +recipe.nutrition.saturatedFat,
-        sugar: +recipe.nutrition.sugar,
-        fiber: +recipe.nutrition.fiber,
-        cholesterol: +recipe.nutrition.cholesterol,
-        sodium: +recipe.nutrition.sodium
+        recipe
       },
       refetchQueries: [{
         query: GqlQueries.approvalListQuery
@@ -68,102 +31,41 @@ export class GraphqlService {
     });
   }
 
-  updateRecipe(recipe: any): Observable<any> {
-    console.log(`recipe: ${JSON.stringify(recipe)}`);
-    const ingredientnames = [];
-    const ingredientamounts = [];
-    const stepnames = [];
-    const stepbodies = [];
-    const preCook = [];
-    for (const step of recipe.steps) {
-      stepnames.push(step.name);
-      stepbodies.push(step.body);
+  updateRecipe(recipe: IRecipe): Observable<any> {
+    const submitRecipe = recipe as any;
+    let counter = 0;
+    const ratersKeys = [];
+    const ratersValues = [];
+    for (const key of Object.keys(submitRecipe.raters)) {
+      ratersKeys.push(key);
+      ratersValues.push(String(submitRecipe.raters[key]));
+      counter++;
     }
-    for (const ingredient of recipe.ingredients) {
-      ingredientnames.push(ingredient.name);
-      ingredientamounts.push(ingredient.amount);
-    }
-    for (const step of recipe.preCook) {
-      preCook.push(step.body);
-    }
-    console.log(`recipe: ${JSON.stringify(recipe)}`);
-
-    // return of (null);
+    submitRecipe.raters = {};
+    submitRecipe.raters.keys = ratersKeys;
+    submitRecipe.raters.values = ratersValues;
 
     return this.apollo.mutate({
       mutation: GqlMutations.updateRecipeMutation,
       variables: {
         recipeId: recipe._id,
-        title: recipe.title,
-        producer: recipe.producer,
-        ingredientnames,
-        ingredientamounts,
-        preCook,
-        stepnames,
-        stepbodies,
-        imgDir: recipe.imgDir,
-        calories: +recipe.nutrition.calories,
-        // TODO: possibly make sure values that weren't provided are assigned as a proper value before getting sent to back-end
-        carbohydrate: +recipe.nutrition.carbohydrate,
-        fat: +recipe.nutrition.fat,
-        protein: +recipe.nutrition.protein,
-        saturatedFat: +recipe.nutrition.saturatedFat,
-        sugar: +recipe.nutrition.sugar,
-        fiber: +recipe.nutrition.fiber,
-        cholesterol: +recipe.nutrition.cholesterol,
-        sodium: +recipe.nutrition.sodium
+        recipe
       },
       refetchQueries: [
         { query: GqlQueries.recipeListQuery },
-        { query: GqlQueries.recipeEditListQuery }
+        { query: GqlQueries.recipeEditListQuery },
+        { query: GqlQueries.recipeQuery, variables: {recipeId: recipe._id} }
       ]
     });
 
   }
 
-  approveRecipe(id: string, recipe: any): Observable<any> {
-    console.log(`recipe: ${JSON.stringify(recipe)}`);
-    const ingredientnames = [];
-    const ingredientamounts = [];
-    const stepnames = [];
-    const stepbodies = [];
-    const preCook = [];
-    for (const step of recipe.steps) {
-      stepnames.push(step.name);
-      stepbodies.push(step.body);
-    }
-    for (const ingredient of recipe.ingredients) {
-      ingredientnames.push(ingredient.name);
-      ingredientamounts.push(ingredient.amount);
-    }
-    for (const step of recipe.preCook) {
-      preCook.push(step.body);
-    }
-
-    // return of(null);
-
+  approveRecipe(id: string, recipe: IRecipe): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: GqlMutations.addRecipeMutation,
       variables: {
         approvalId: id,
-        title: recipe.title,
-        producer: recipe.producer,
-        ingredientnames,
-        ingredientamounts,
-        preCook,
-        stepnames,
-        stepbodies,
-        imgDir: recipe.imgDir,
-        calories: +recipe.nutrition.calories,
-        // TODO: possibly make sure values that weren't provided are assigned as a proper value before getting sent to back-end
-        carbohydrate: +recipe.nutrition.carbohydrate,
-        fat: +recipe.nutrition.fat,
-        protein: +recipe.nutrition.protein,
-        saturatedFat: +recipe.nutrition.saturatedFat,
-        sugar: +recipe.nutrition.sugar,
-        fiber: +recipe.nutrition.fiber,
-        cholesterol: +recipe.nutrition.cholesterol,
-        sodium: +recipe.nutrition.sodium
+        recipe
       },
       refetchQueries: [
         { query: GqlQueries.approvalListQuery },
@@ -222,11 +124,11 @@ export class GraphqlService {
   updateUsers(users: IUser[]): Observable<any> {
     const idArr = [];
     const isAdminArr = [];
-
     for (const user of users) {
       idArr.push(user._id);
       isAdminArr.push(user.isAdmin);
     }
+
     return this.apollo.mutate({
       mutation: GqlMutations.updateUsersMutation,
       variables: {
@@ -261,9 +163,10 @@ export class GraphqlService {
   rateRecipe(id: string, ratersKeys: string[], ratersValues: string[]): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: GqlMutations.rateMutation,
-      refetchQueries: [{
-        query: GqlQueries.recipeListQuery
-      }],
+      refetchQueries: [
+        { query: GqlQueries.recipeListQuery },
+        { query: GqlQueries.recipeQuery, variables: {recipeId: id} }
+      ],
       variables: {
         recipeId: id,
         ratersKeys,
@@ -275,9 +178,10 @@ export class GraphqlService {
   favoriteRecipe(id: string, favoriters: string[]): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: GqlMutations.favoriteMutation,
-      refetchQueries: [{
-        query: GqlQueries.recipeListQuery
-      }],
+      refetchQueries: [
+        { query: GqlQueries.recipeListQuery },
+        { query: GqlQueries.recipeQuery, variables: {recipeId: id} }
+        ],
       variables: {
         recipeId: id,
         favoriters

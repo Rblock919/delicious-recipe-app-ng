@@ -16,7 +16,7 @@ import {Toastr, TOASTR_TOKEN} from 'src/app/core/services/toastr.service';
 export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   recipe: IRecipe;
-  recipeId: number;
+  recipeId: string;
   preCookTitle: string;
   favorited: boolean;
   rated: boolean;
@@ -48,27 +48,33 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         this.preCookTitle = 'Before You Cook:';
       }
 
-      const tmpMap = new Map<number, number>();
+      // construct map on first initial fetch from gql
+      if (Array.isArray(this.recipe.raters.keys)) {
+        console.log('on actual first load');
+        const tmpMap = new Map<string, number>();
 
-      let counter = 0;
-      for (const key of result.raters.keys) {
-        tmpMap[key] = result.raters.values[counter];
-        counter++;
+        let counter = 0;
+        for (const key of result.raters.keys) {
+          tmpMap[key] = result.raters.values[counter];
+          counter++;
+        }
+
+        this.recipe.raters = tmpMap;
       }
-
-      this.recipe.raters = tmpMap;
 
       if (Object.keys(this.recipe.raters).length > 0) {
         this.rated = !!(this.recipe.raters[this.session.getUser._id]);
         this.userRating = this.rated ? this.recipe.raters[this.session.getUser._id] : 0;
 
         let ratingCounter = 0;
+        this.avgRating = 0;
         for (const value of Object.values(this.recipe.raters)) {
           this.avgRating += Number(value);
           ratingCounter++;
         }
 
         this.avgRating /= ratingCounter;
+        console.log(`avgRating: ${this.avgRating}`);
       }
     }, err => {
       console.log(`err: ${err}`);
@@ -98,6 +104,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipeApi.rateRecipe(this.recipe).subscribe(res => {
       this.rated = true;
       this.toastr.success(`${this.sanitizer.sanitize(SecurityContext.HTML, this.recipe.title)} Successfully Rated!`);
+
+      console.log(`recipe in rate callback: ${JSON.stringify(this.recipe)}`);
 
       // update average rating
       let ratingCounter = 0;

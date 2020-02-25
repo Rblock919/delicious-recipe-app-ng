@@ -1,5 +1,5 @@
 export interface IRecipe {
-  _id: number;
+  _id: string;
   title: string;
   producer?: string;
   ingredients?: [
@@ -28,7 +28,7 @@ export interface IRecipe {
   };
   imgDir?: string;
   favoriters?: string[];
-  raters?: Map<number, number>;
+  raters?: Map<string, number>;
 }
 
 export interface IRecipeResolved {
@@ -43,7 +43,7 @@ export interface IRecipesResolved {
 
 //    GraphQL Data Models
 export interface IRecipeGQL {
-  _id: number;
+  _id: string;
   title: string;
   producer?: string;
   nutritionValues?: {
