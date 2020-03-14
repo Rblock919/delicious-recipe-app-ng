@@ -48,7 +48,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         this.recipeId = this.recipe._id;
         let favoriters: string[];
         favoriters = this.recipe.favoriters;
-        this.favorited = favoriters.indexOf('' + this.session.getUser._id) > -1;
+        if (!!this.session.getUser) {
+          this.favorited = favoriters.indexOf('' + this.session.getUser._id) > -1;
+        }
         if (this.recipe.producer === 'Hello Fresh') {
           this.preCookTitle = 'Bust Out:';
         } else if (this.recipe.producer === 'Home Chef') {
@@ -70,7 +72,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         }
 
         if (Object.keys(this.recipe.raters).length > 0) {
-          this.rated = !!this.recipe.raters[this.session.getUser._id];
+          if (!!this.session.getUser) {
+            this.rated = !!this.recipe.raters[this.session.getUser._id];
+          } else {
+            this.rated = false;
+          }
           this.userRating = this.rated
             ? this.recipe.raters[this.session.getUser._id]
             : 0;

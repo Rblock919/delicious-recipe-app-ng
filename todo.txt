@@ -1,7 +1,8 @@
             -- Recipe Angular Client --
 
-- create dev docker file (possibly nginx?)
 - create prod docker file (possibly nginx?)
+
+- powered by in footer for frameworks
 
 - error handling eventually for unauthorized/expired sessions
 - Fix the nutritionValues -> nutrition discrepancy as well

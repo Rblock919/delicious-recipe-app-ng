@@ -1,6 +1,6 @@
 {
-  "name": "recipe-app",
-  "version": "1.0.1",
+  "name": "recipe-app-ng",
+  "version": "2.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

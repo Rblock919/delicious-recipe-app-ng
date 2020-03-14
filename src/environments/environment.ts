@@ -4,11 +4,15 @@
 
 export const environment = {
   production: false,
-  // Local
+  // Local Express Api
   path: 'http://localhost:3000/api/',
+  // path: 'https://localhost:3000/api/'
+
+  // Graphql Endpoint
+  // gqlPath: 'http://gql:4000/',
   gqlPath: 'http://localhost:4000/',
   // gqlPath: 'https://delicious-recipe-app-gql-dev.herokuapp.com/'
-  // path: 'https://localhost:3000/api/'
+
   // Static Local desktop address, used for testing cross domain functionality between angular & node server
   // path: 'http://192.168.1.7:3000/api/'
 
