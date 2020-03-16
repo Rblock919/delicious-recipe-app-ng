@@ -3,6 +3,9 @@
 - create prod docker file (possibly nginx?)
 
 - powered by in footer for frameworks
+- infinite scrolling pagination via apollo docs recipe
+- fix query + mutation naming convention
+- implement notifications to admins on new recipe submissions via gql subscriptions
 
 - error handling eventually for unauthorized/expired sessions
 - Fix the nutritionValues -> nutrition discrepancy as well
@@ -34,9 +37,7 @@
 - make sure pages that trigger graphQL queries have a loading icon
 - implement validation in reactive angular forms for mongoDB inj characters:   $, }, {
 
-- implement redis for caching functionality or other functionality such as load more recipe on scroll (also implement pagination in form of infinite scrolling for recipe list page)
-^^^>>> look into RedisCache with apollo-server-cache-redis
-  ^^>> possibly apollo-datasource-rest package as well
+
 
   -- Shared --
 - handle getUserData with gql
