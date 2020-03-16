@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const recipeListQuery = gql`
-  {
+  query recipeList {
     recipes {
       _id
       title
@@ -20,7 +20,7 @@ export const recipeListQuery = gql`
 `;
 
 export const recipeEditListQuery = gql`
-  {
+  query recipeEditList {
     recipes {
       _id
       title
@@ -29,7 +29,7 @@ export const recipeEditListQuery = gql`
 `;
 
 export const userListQuery = gql`
-  {
+  query userList {
     users {
       _id
       username
@@ -39,7 +39,7 @@ export const userListQuery = gql`
 `;
 
 export const approvalListQuery = gql`
-  {
+  query approvalList {
     unapprovedRecipes {
       _id
       title
@@ -120,7 +120,7 @@ export const approvalQuery = gql`
 `;
 
 export const signOutQuery = gql`
-  {
+  query signOut {
     signOut
   }
 `;
