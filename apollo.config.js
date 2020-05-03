@@ -1,8 +1,8 @@
 module.exports = {
   client: {
     service: {
-      name: "recipe-app-gql",
-      url: "http://localhost:4000/"
-    }
-  }
-}
+      name: 'recipe-app-nest',
+      url: 'http://localhost:3000/',
+    },
+  },
+};

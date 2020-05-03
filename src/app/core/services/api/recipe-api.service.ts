@@ -52,7 +52,7 @@ export class RecipeApiService {
 
   rateRecipe(recipe: IRecipe): Observable<any> {
     const ratersKeys = Object.keys(recipe.raters).map(String);
-    const ratersValues = Object.values(recipe.raters).map(String);
+    const ratersValues = Object.values(recipe.raters).map(Number);
     return this.graphQLService.rateRecipe(recipe._id, ratersKeys, ratersValues);
   }
 

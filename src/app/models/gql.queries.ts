@@ -48,7 +48,7 @@ export const approvalListQuery = gql`
 `;
 
 export const recipeQuery = gql`
-  query recipe($recipeId: String!) {
+  query recipe($recipeId: ID!) {
     recipe(id: $recipeId) {
       _id
       title
@@ -84,7 +84,7 @@ export const recipeQuery = gql`
 `;
 
 export const approvalQuery = gql`
-  query approvalRecipe($recipeId: String!) {
+  query approvalRecipe($recipeId: ID!) {
     unapprovedRecipe(id: $recipeId) {
       _id
       title
@@ -121,6 +121,18 @@ export const approvalQuery = gql`
 
 export const signOutQuery = gql`
   query signOut {
-    signOut
+    logout {
+      message
+    }
+  }
+`;
+
+export const getUserDataQuery = gql`
+  query getUserData {
+    getUserData {
+      _id
+      username
+      isAdmin
+    }
   }
 `;

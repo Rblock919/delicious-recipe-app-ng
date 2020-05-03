@@ -11,7 +11,7 @@ export class AuthInterceptorService implements HttpInterceptor {
     const session = this.injector.get(SessionService);
 
     const authRequest = req.clone({
-      headers: req.headers.set('Authorization', 'token ' + session.token),
+      headers: req.headers.set('Authorization', `Bearer ${session.token}`),
       withCredentials: true,
     });
 

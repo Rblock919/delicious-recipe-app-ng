@@ -48,7 +48,6 @@ export class GraphqlService {
     return this.apollo.mutate({
       mutation: GqlMutations.updateRecipeMutation,
       variables: {
-        recipeId: recipe._id,
         recipe,
       },
       refetchQueries: [
@@ -73,7 +72,7 @@ export class GraphqlService {
           { query: GqlQueries.recipeListQuery },
         ],
       })
-      .pipe(map(result => result.data.addRecipe));
+      .pipe(map(result => result.data.add));
   }
 
   rejectRecipe(id: string): Observable<any> {
@@ -131,21 +130,27 @@ export class GraphqlService {
   }
 
   updateUsers(users: IUser[]): Observable<any> {
-    const idArr = [];
-    const isAdminArr = [];
+    const editUserData = [];
     for (const user of users) {
-      idArr.push(user._id);
-      isAdminArr.push(user.isAdmin);
+      editUserData.push({
+        _id: user._id,
+        isAdmin: user.isAdmin,
+      });
     }
 
     return this.apollo.mutate({
       mutation: GqlMutations.updateUsersMutation,
       variables: {
-        ids: idArr,
-        isAdmins: isAdminArr,
+        editUserData,
       },
       refetchQueries: [{ query: GqlQueries.userListQuery }],
     });
+  }
+
+  getUserData(): Observable<IUser> {
+    return this.apollo
+      .watchQuery<any>({ query: GqlQueries.getUserDataQuery })
+      .valueChanges.pipe(map(result => result.data.getUserData));
   }
 
   getUserList(): Observable<IApolloResponse> {
@@ -178,7 +183,7 @@ export class GraphqlService {
   rateRecipe(
     id: string,
     ratersKeys: string[],
-    ratersValues: string[]
+    ratersValues: number[]
   ): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: GqlMutations.rateMutation,
@@ -217,7 +222,7 @@ export class GraphqlService {
           password,
         },
       })
-      .pipe(map(result => result.data.signIn));
+      .pipe(map(result => result.data.login));
   }
 
   signUp(username: string, password: string): Observable<any> {
@@ -229,7 +234,7 @@ export class GraphqlService {
           password,
         },
       })
-      .pipe(map(result => result.data.signUp));
+      .pipe(map(result => result.data.register));
   }
 
   signOut(): Observable<any> {

@@ -30,11 +30,11 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe((routerEvent: Event) => {
       this.checkRouterEvent(routerEvent);
     });
-    // application reloaded or user refreshed before logging out, persist user data to new instance of application
+    // application reloaded or user refreshed before logging out, re-fetch user data to new instance of application
     if (!this.sessionService.getUser && this.sessionService.isAuthenticated) {
       this.authService.getUserData().subscribe(
         res => {
-          this.sessionService.setUser(res.user);
+          this.sessionService.setUser(res);
         },
         err => {
           console.error(

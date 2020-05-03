@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export const signInMutation = gql`
   mutation signIn($username: String!, $password: String!) {
-    signIn(username: $username, password: $password) {
+    login(user: { username: $username, password: $password }) {
       token
       user {
         _id
@@ -14,66 +14,66 @@ export const signInMutation = gql`
 `;
 
 export const submitForApprovalMutation = gql`
-  mutation submitForApproval($recipe: inRecipe) {
+  mutation submitForApproval($recipe: RecipeInput!) {
     submitForApproval(recipe: $recipe)
   }
 `;
 
 export const addRecipeMutation = gql`
-  mutation addRecipe($approvalId: String!, $recipe: inRecipe) {
-    addRecipe(approvalId: $approvalId, recipe: $recipe) {
-      id
-    }
+  mutation addRecipe($approvalId: ID!, $recipe: RecipeInput!) {
+    add(approvalId: $approvalId, recipe: $recipe)
   }
 `;
 
 export const updateRecipeMutation = gql`
-  mutation updateRecipe($recipeId: String!, $recipe: inRecipe) {
-    updateRecipe(recipeId: $recipeId, recipe: $recipe)
+  mutation updateRecipe($recipe: RecipeInput!) {
+    update(recipe: $recipe) {
+      _id
+    }
   }
 `;
 
 export const updateUsersMutation = gql`
-  mutation updateUsers($ids: [String]!, $isAdmins: [Boolean]!) {
-    updateUsers(idArr: $ids, isAdminArr: $isAdmins)
+  mutation updateUsers($editUserData: [EditUserInput!]!) {
+    updateUsers(userData: $editUserData)
   }
 `;
 
 export const deleteRecipeMutation = gql`
-  mutation deleteRecipe($recipeId: String!) {
-    deleteRecipe(id: $recipeId)
+  mutation deleteRecipe($recipeId: ID!) {
+    delete(id: $recipeId)
   }
 `;
 
 export const rejectRecipeMutation = gql`
-  mutation rejectRecipe($recipeId: String!) {
-    rejectRecipe(id: $recipeId)
+  mutation rejectRecipe($recipeId: ID!) {
+    reject(id: $recipeId)
   }
 `;
 
 export const rateMutation = gql`
   mutation rateRecipe(
-    $recipeId: String!
-    $ratersKeys: [String]!
-    $ratersValues: [String]!
+    $recipeId: ID!
+    $ratersKeys: [String!]!
+    $ratersValues: [Int!]!
   ) {
-    rateRecipe(
-      id: $recipeId
-      ratersKeys: $ratersKeys
-      ratersValues: $ratersValues
-    )
+    rate(id: $recipeId, ratersKeys: $ratersKeys, ratersValues: $ratersValues) {
+      _id
+    }
   }
 `;
 
 export const favoriteMutation = gql`
-  mutation favoriteRecipe($recipeId: String!, $favoriters: [String]!) {
-    favoriteRecipe(id: $recipeId, favoriters: $favoriters)
+  mutation favoriteRecipe($recipeId: ID!, $favoriters: [String!]!) {
+    favorite(id: $recipeId, favoriters: $favoriters) {
+      _id
+    }
   }
 `;
 
 export const signUpMutation = gql`
   mutation signUp($username: String!, $password: String!) {
-    signUp(username: $username, password: $password) {
+    register(userInfo: { username: $username, password: $password }) {
       token
       user {
         _id

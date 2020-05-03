@@ -38,17 +38,17 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    this.session.logout();
-
     this.clearSearch();
 
     this.auth.signOut().subscribe(
       res => {
+        this.session.logout();
         this.toastr.success('You have successfully logged out');
         this.router.navigate(['logout']);
       },
       err => {
-        console.error('Error destroying session from backend');
+        this.session.logout();
+        console.error('Error destroying session from backend: ', err);
         this.toastr.error('Error ending session with backend');
         this.router.navigate(['logout']);
         // TO-DO: implement logging out of front end and hiding error from user

@@ -1,6 +1,6 @@
             -- Recipe Angular Client --
 
-- create prod docker file (possibly nginx?)
+- create prod docker file
 
 - powered by in footer for frameworks
 - infinite scrolling pagination via apollo docs recipe

@@ -34,10 +34,11 @@ export class AuthService {
   }
 
   // TODO: handle getUserData using graphql
-  getUserData(): Observable<IUserResolved> {
-    return this.httpClient.get<IUserResolved>(`${this.uri}/getUserData`, {
-      responseType: 'json',
-    });
+  getUserData(): Observable<IUser> {
+    return this.gqlService.getUserData();
+    // return this.httpClient.get<IUserResolved>(`${this.uri}/getUserData`, {
+    // responseType: 'json',
+    // });
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
