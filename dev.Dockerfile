@@ -10,14 +10,14 @@ COPY . /app/
 # The below is to download the dependencies needed to install and use app dependencies, such as python
 # Alpine node does not provide these but installing them on top on alpine-node still results in much smaller img size
 RUN apk --no-cache --update --virtual build-dependencies add \
-    python \
-    make \
-    g++ \
-    && npm install \
-    && apk del build-dependencies
+  python \
+  make \
+  g++ \
+  && npm install \
+  && apk del build-dependencies
 
 EXPOSE 4200
-CMD [ "npm", "run", "start.local" ]
+CMD [ "npm", "run", "start:local" ]
 
 # Docker Build Command
 # docker build -f node.Dockerfile -t recipe-api .

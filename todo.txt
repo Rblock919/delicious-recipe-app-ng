@@ -2,15 +2,18 @@
 
 - create prod docker file
 
+- commenting functionality on recipes
+
+- Fix the nutritionValues -> nutrition discrepancy
+
 - powered by in footer for frameworks
 - infinite scrolling pagination via apollo docs recipe
 - fix query + mutation naming convention
 - implement notifications to admins on new recipe submissions via gql subscriptions
 
 - error handling eventually for unauthorized/expired sessions
-- Fix the nutritionValues -> nutrition discrepancy as well
 - upgrade to angular 9 and upgrade lazyloading import statements
-- make angular app ping both servers on init to wake them up
+- make angular app ping server on init to wake them up faster for deployed envrionments
 - test using Ivy
 - service/page for users to see their ratings and change them
 - non-authenticated gallery page
@@ -20,17 +23,14 @@
 - implement route animations
 - consider implementing sort & filter functionality to search page
 - removing routing to error component once I'm confident that most errors have been handled and routed to in code sufficiently
-- make sure all components that are grabbing data from resolvers route to error page on error existence
 - implement route guard when leaving edit users page if changes have been made and not saved
 - implement logic so that the application asks the user to log back in if tokens are missing
 - add more validation for user submitted info, especially in front end (min + max lengths, disallowed characters for injection attacks)
 - simplify/break-up route-guard logic
-- tooltip to explain how and where to/not-to copy image address'
-- test and make sure users can rate a recipe with score of 0 and ui/app properly handles it
+- tooltip to explain how and where to/not-to copy image address
 - eventually implement advanced search with ranges for specific macros and possibly filter on ingredients as well & etc
 - modularize some of the logic in edit/approve recipe components to external service
 - rejecting recipes can lead to a notifications page where an admin can give a user a reason why they rejected or a notification that their recipe was approved
-- commenting functionality on recipes?
 - save as (.pdf, .txt, etc.) functionality for recipes
 - possibly split route-guard into two guards to simplify logic (maybe)
 - look for angular equivalent to express-validator (aside from reactive forms validation)
@@ -38,9 +38,7 @@
 - implement validation in reactive angular forms for mongoDB inj characters:   $, }, {
 
 
-
   -- Shared --
-- handle getUserData with gql
 - start to implement testing
 - implement password resets (for users & admin)
 - implement pagination for recipe search page and recipe list page
