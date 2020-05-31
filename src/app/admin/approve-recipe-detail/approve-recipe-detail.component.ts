@@ -60,7 +60,6 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.recipeId = this.route.snapshot.params.id;
-    // console.log('Id in detail comp: ' + this.recipeId);
 
     this.recipeForm = this.fb.group({
       producer: ['', Validators.required],
@@ -155,74 +154,6 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
         console.log(`err: ${err}`);
       }
     );
-
-    // const resolvedData: IRecipeResolved = this.route.snapshot.data.resolvedData;
-    // if (resolvedData.error) {
-    //   console.error(resolvedData.error);
-    //   this.router.navigate(['error']);
-    // } else {
-    //     this.recipe = resolvedData.recipe;
-    //     this.setValidations(this.recipe.producer);
-    //
-    //     if (this.ingredients) {
-    //       this.ingredients.reset();
-    //     }
-    //     if (this.steps) {
-    //       this.steps.reset();
-    //     }
-    //
-    //     let ingredientCounter = 0;
-    //     let stepCounter = 0;
-    //     let preCookCounter = 0;
-    //
-    //     this.recipe.ingredients.forEach(element => {
-    //       const choppedElement = element.split(' | ');
-    //       const ingredientName = choppedElement[0];
-    //       const ingredientAmount = choppedElement[1];
-    //       // console.log('ingredients array: ' + element);
-    //       this.ingredients.push(this.buildIngredient());
-    //       this.ingredients.at(ingredientCounter).patchValue({
-    //         name: ingredientName,
-    //         amount: ingredientAmount
-    //       });
-    //       ingredientCounter++;
-    //     });
-    //
-    //     this.recipe.preCook.forEach(element => {
-    //       this.preCook.push(this.buildPreCook());
-    //       this.preCook.at(preCookCounter).patchValue({
-    //         body: element
-    //       });
-    //       preCookCounter++;
-    //     });
-    //
-    //     this.recipe.steps.forEach(step => {
-    //       // console.log('Step ' + (stepCounter + 1) + ': ' + step.name + ' - ' + step.body);
-    //       this.steps.push(this.buildStep());
-    //       this.steps.at(stepCounter).patchValue({
-    //         name: step.name,
-    //         body: step.body
-    //       });
-    //       stepCounter++;
-    //     });
-    //
-    //     this.imageDir = this.recipe.imgDir;
-    //
-    //     if (this.recipe.producer === 'Blue Apron' && this.recipe.nutritionValues.fat) {
-    //       console.log('producer is BA and nutrition info was provided...');
-    //       this.changeBlueApronNutritionalFlag();
-    //     }
-    //
-    //     this.recipeForm.patchValue({
-    //       producer: this.recipe.producer,
-    //       title: this.recipe.title,
-    //       nutrition: this.recipe.nutritionValues,
-    //       imgDir: this.recipe.imgDir
-    //     });
-    //
-    //     this.watchProducer();
-    //
-    // }
   }
 
   changeBlueApronNutritionalFlag(): void {
@@ -386,25 +317,19 @@ export class ApproveRecipeDetailComponent implements OnInit, OnDestroy {
       nutritionControl.get('fiber').patchValue(null);
     }
 
-    // console.log('recipe form value: ' + JSON.stringify(this.recipeForm.value));
-    // return;
-
     let formRecipe: IRecipe;
     formRecipe = this.recipeForm.value;
     // formRecipe.nutritionValues = this.recipeForm.get('nutrition').value;
 
-    formRecipe.favoriters = [];
-    formRecipe.raters = {} as Map<string, number>;
     this.prepRecipeForSubmit(formRecipe);
 
-    // console.log(`formRecipe: ${JSON.stringify(formRecipe)}`);
-
-    // add recipe API call
-    this.recipeApiService.addRecipe(formRecipe, this.recipeId).subscribe(
+    // approve recipe API call
+    this.recipeApiService.approveRecipe(formRecipe, this.recipeId).subscribe(
       result => {
+        console.log({ result });
         this.submitted = true;
         this.toastr.success('Recipe Successfully Approved!');
-        this.router.navigate(['/recipe', result.id]);
+        this.router.navigate(['/recipe', result._id]);
       },
       err => {
         this.toastr.error('Error Submitting Recipe');

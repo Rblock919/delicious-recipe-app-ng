@@ -256,8 +256,6 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
 
     // user is adding new recipe
     if (this.id === '0') {
-      formRecipe.favoriters = [];
-      formRecipe.raters = {} as Map<string, number>;
       this.apiService.submitRecipeForApproval(formRecipe).subscribe(
         res => {
           this.submitted = true;
@@ -274,21 +272,25 @@ export class EditRecipeComponent implements OnInit, OnDestroy {
     } else {
       // user is editing current recipe
 
-      const tmpMap = new Map<string, number>();
-      const tmpRecipe = this.recipe as any;
+      console.log({ formRecipe }); // has raters/keys arrays
+      console.log({ thisRecipe: this.recipe }); // has raters as map
 
-      let counter = 0;
-      for (const key of tmpRecipe.raters.keys) {
-        tmpMap[key] = tmpRecipe.raters.values[counter];
-        counter++;
-      }
+      // const tmpMap = new Map<string, number>();
+      const tmpRecipe = formRecipe as any;
 
-      this.recipe.raters = tmpMap;
+      // let counter = 0;
+      // for (const key of tmpRecipe.raters.keys) {
+      //   tmpMap[key] = tmpRecipe.raters.values[counter];
+      //   counter++;
+      // }
+
+      // this.recipe.raters = tmpMap;
 
       formRecipe._id = this.id;
-      formRecipe.favoriters = this.recipe.favoriters;
-      formRecipe.raters = this.recipe.raters;
-      console.log(`formRecipe: ${JSON.stringify(formRecipe)}`);
+      formRecipe.nutritionValues = tmpRecipe.nutrition;
+      // formRecipe.favoriters = this.recipe.favoriters;
+      // formRecipe.raters = this.recipe.raters;
+      console.log(`formRecipe right before: ${JSON.stringify(formRecipe)}`);
       this.apiService.updateRecipe(formRecipe).subscribe(
         res => {
           this.submitted = true;

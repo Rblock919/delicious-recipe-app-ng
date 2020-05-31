@@ -5,14 +5,13 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 
 import { environment } from 'src/environments/environment';
 
-// const uri = 'http://localhost:4000/';
-const uri = environment.gqlPath;
+const uri = environment.path;
 
 export function createApollo(httpLink: HttpLink) {
   return {
     link: httpLink.create({
       uri,
-      withCredentials: true,
+      // withCredentials: true,
     }),
     cache: new InMemoryCache({
       addTypename: false,

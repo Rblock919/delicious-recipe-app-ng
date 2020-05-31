@@ -161,7 +161,7 @@ export class RecipeSearchComponent implements OnInit, OnDestroy {
     const recipeToFav = $event.recipe as IRecipe;
     const favoriting = $event.favoriting as boolean;
 
-    this.apiService.favoriteRecipe(recipeToFav).subscribe(
+    this.apiService.favoriteRecipe(recipeToFav._id).subscribe(
       res => {
         if (favoriting) {
           const message = `${recipeToFav.title} Has Been Favorited!`;
@@ -196,22 +196,24 @@ export class RecipeSearchComponent implements OnInit, OnDestroy {
   submitRate(): void {
     this.selectedRecipe.raters[this.userId] = this.userRating;
 
-    this.apiService.rateRecipe(this.selectedRecipe).subscribe(
-      res => {
-        console.log(`res: ${res}`);
-        const idx = this.recipeList.indexOf(this.selectedRecipe);
-        this.recipeList[idx].raters[this.userId] = this.userRating;
-        this.toastr.success(
-          this.sanitizer.sanitize(
-            SecurityContext.HTML,
-            `${this.selectedRecipe.title} has been successfully rated`
-          )
-        );
-      },
-      err => {
-        console.log(`err: ${err}`);
-        this.toastr.error('Error rating recipe');
-      }
-    );
+    this.apiService
+      .rateRecipe(this.selectedRecipe._id, this.userRating)
+      .subscribe(
+        res => {
+          console.log(`res: ${res}`);
+          const idx = this.recipeList.indexOf(this.selectedRecipe);
+          this.recipeList[idx].raters[this.userId] = this.userRating;
+          this.toastr.success(
+            this.sanitizer.sanitize(
+              SecurityContext.HTML,
+              `${this.selectedRecipe.title} has been successfully rated`
+            )
+          );
+        },
+        err => {
+          console.log(`err: ${err}`);
+          this.toastr.error('Error rating recipe');
+        }
+      );
   }
 }

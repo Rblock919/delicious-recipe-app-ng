@@ -121,15 +121,13 @@ export const approvalQuery = gql`
 
 export const signOutQuery = gql`
   query signOut {
-    logout {
-      message
-    }
+    logout
   }
 `;
 
 export const getUserDataQuery = gql`
   query getUserData {
-    getUserData {
+    me {
       _id
       username
       isAdmin

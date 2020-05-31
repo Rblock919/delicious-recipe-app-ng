@@ -17,7 +17,7 @@ export class AdminService {
     return this.graphQLService.getUserList();
   }
 
-  updateUsers(users: IUser[]): Observable<any> {
+  updateUsers(users: { userId: string; isAdmin: boolean }[]): Observable<any> {
     return this.graphQLService.updateUsers(users);
   }
 

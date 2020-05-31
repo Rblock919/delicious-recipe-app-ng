@@ -18,7 +18,6 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private gqlService: GraphqlService,
     @Inject(TOASTR_TOKEN) private toastr: Toastr,
     private sessionService: SessionService,
     private router: Router

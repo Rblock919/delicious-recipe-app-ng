@@ -10,7 +10,6 @@ import { LoggerService } from './services/logger.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { Toastr, TOASTR_TOKEN } from './services/toastr.service';
 import { JQ_TOKEN } from './services/jQuery.service';
-import { RecipeResolverService } from './resolvers/recipe-resolver.service';
 import { GraphqlService } from './services/api/graphql.service';
 import { IndexGuard } from './guards/index.guard';
 import { RouteGuard } from './guards/route.guard';
@@ -24,7 +23,6 @@ const jQuery = window['$'];
   providers: [
     RecipeApiService,
     GraphqlService,
-    RecipeResolverService,
     AuthService,
     SessionService,
     LoggerService,

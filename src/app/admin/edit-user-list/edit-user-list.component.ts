@@ -15,7 +15,7 @@ export class EditUserListComponent implements OnInit, OnDestroy {
   private userSub: Subscription;
 
   userList: IUser[];
-  updatedUserList: IUser[];
+  updatedUserList: { userId: string; isAdmin: boolean }[];
   editedAdminFields: boolean[];
   differentFromOriginal = false;
 
@@ -69,18 +69,17 @@ export class EditUserListComponent implements OnInit, OnDestroy {
 
   submit(): void {
     this.updatedUserList = [];
-    let counter = 0;
-    let counter2 = 0;
+    // let counter = 0;
 
-    this.userList.forEach(user => {
-      if (user.isAdmin !== this.editedAdminFields[counter]) {
-        this.updatedUserList.push(user);
-        this.updatedUserList[counter2].isAdmin = this.editedAdminFields[
-          counter
-        ];
-        counter2++;
+    // TODO: improve logic with maps or reducers
+    this.userList.forEach((user, index) => {
+      if (user.isAdmin !== this.editedAdminFields[index]) {
+        this.updatedUserList.push({
+          userId: user._id,
+          isAdmin: this.editedAdminFields[index],
+        });
       }
-      counter++;
+      // counter++;
     });
 
     this.adminService.updateUsers(this.updatedUserList).subscribe(

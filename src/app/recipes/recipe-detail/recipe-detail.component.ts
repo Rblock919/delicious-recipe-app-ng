@@ -49,7 +49,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         let favoriters: string[];
         favoriters = this.recipe.favoriters;
         if (!!this.session.getUser) {
-          this.favorited = favoriters.indexOf('' + this.session.getUser._id) > -1;
+          this.favorited =
+            favoriters.indexOf('' + this.session.getUser._id) > -1;
         }
         if (this.recipe.producer === 'Hello Fresh') {
           this.preCookTitle = 'Bust Out:';
@@ -117,7 +118,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   submitRate() {
     this.recipe.raters[this.session.getUser._id] = this.userRating;
 
-    this.recipeApi.rateRecipe(this.recipe).subscribe(
+    this.recipeApi.rateRecipe(this.recipe._id, this.userRating).subscribe(
       res => {
         this.rated = true;
         this.toastr.success(
@@ -157,7 +158,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
     console.log(`this.recipe: ${JSON.stringify(this.recipe)}`);
 
-    this.recipeApi.favoriteRecipe(this.recipe).subscribe(
+    this.recipeApi.favoriteRecipe(this.recipe._id).subscribe(
       result => {
         // console.log('res from fav api call: ' + res);
         if (this.favorited) {

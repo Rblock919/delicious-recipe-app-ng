@@ -1,21 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { of, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { IUser, IUserResolved } from '../../models/user.model';
-import { environment } from 'src/environments/environment';
+import { IUser } from '../../models/user.model';
 import { GraphqlService } from './api/graphql.service';
 
 @Injectable()
 // { providedIn: 'root' }
 export class AuthService {
-  private uri = environment.path + 'auth';
-
-  constructor(
-    private httpClient: HttpClient,
-    private gqlService: GraphqlService
-  ) {}
+  constructor(private gqlService: GraphqlService) {}
 
   signUp(newUser: IUser): Observable<any> {
     return this.gqlService.signUp(newUser.username, newUser.password);
@@ -23,7 +16,7 @@ export class AuthService {
   }
 
   signIn(userInfo: IUser): Observable<any> {
-    return this.gqlService.signIn(userInfo.username, userInfo.password);
+    return this.gqlService.login(userInfo.username, userInfo.password);
     // .pipe(catchError(this.handleError('signIn')));
   }
 

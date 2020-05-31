@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export const signInMutation = gql`
   mutation signIn($username: String!, $password: String!) {
-    login(user: { username: $username, password: $password }) {
+    login(input: { username: $username, password: $password }) {
       token
       user {
         _id
@@ -15,27 +15,29 @@ export const signInMutation = gql`
 
 export const submitForApprovalMutation = gql`
   mutation submitForApproval($recipe: RecipeInput!) {
-    submitForApproval(recipe: $recipe)
+    submit(input: $recipe)
   }
 `;
 
 export const addRecipeMutation = gql`
   mutation addRecipe($approvalId: ID!, $recipe: RecipeInput!) {
-    add(approvalId: $approvalId, recipe: $recipe)
+    approve(input: { approvalId: $approvalId, recipe: $recipe }) {
+      _id
+    }
   }
 `;
 
 export const updateRecipeMutation = gql`
-  mutation updateRecipe($recipe: RecipeInput!) {
-    update(recipe: $recipe) {
+  mutation updateRecipe($recipe: RecipeInput!, $recipeId: ID!) {
+    update(input: { recipeId: $recipeId, recipe: $recipe }) {
       _id
     }
   }
 `;
 
 export const updateUsersMutation = gql`
-  mutation updateUsers($editUserData: [EditUserInput!]!) {
-    updateUsers(userData: $editUserData)
+  mutation updateUsers($editUserData: [UpdateUserInput!]!) {
+    updateUsers(input: $editUserData)
   }
 `;
 
@@ -52,28 +54,20 @@ export const rejectRecipeMutation = gql`
 `;
 
 export const rateMutation = gql`
-  mutation rateRecipe(
-    $recipeId: ID!
-    $ratersKeys: [String!]!
-    $ratersValues: [Int!]!
-  ) {
-    rate(id: $recipeId, ratersKeys: $ratersKeys, ratersValues: $ratersValues) {
-      _id
-    }
+  mutation rateRecipe($recipeId: ID!, $value: Int!) {
+    rate(input: { recipeId: $recipeId, rating: $value })
   }
 `;
 
 export const favoriteMutation = gql`
-  mutation favoriteRecipe($recipeId: ID!, $favoriters: [String!]!) {
-    favorite(id: $recipeId, favoriters: $favoriters) {
-      _id
-    }
+  mutation favoriteRecipe($recipeId: ID!) {
+    favorite(id: $recipeId)
   }
 `;
 
 export const signUpMutation = gql`
   mutation signUp($username: String!, $password: String!) {
-    register(userInfo: { username: $username, password: $password }) {
+    register(input: { username: $username, password: $password }) {
       token
       user {
         _id

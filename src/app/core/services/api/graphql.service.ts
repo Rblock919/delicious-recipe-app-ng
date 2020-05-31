@@ -31,29 +31,31 @@ export class GraphqlService {
     });
   }
 
-  updateRecipe(recipe: IRecipe): Observable<any> {
-    const submitRecipe = recipe as any;
-    let counter = 0;
-    const ratersKeys = [];
-    const ratersValues = [];
-    for (const key of Object.keys(submitRecipe.raters)) {
-      ratersKeys.push(key);
-      ratersValues.push(String(submitRecipe.raters[key]));
-      counter++;
-    }
-    submitRecipe.raters = {};
-    submitRecipe.raters.keys = ratersKeys;
-    submitRecipe.raters.values = ratersValues;
+  updateRecipe(recipeData: IRecipe): Observable<any> {
+    console.log({ recipeData });
+    const recipe = {
+      title: recipeData.title,
+      producer: recipeData.producer,
+      ingredients: recipeData.ingredients,
+      preCook: recipeData.preCook || [],
+      steps: recipeData.steps,
+      nutrition: recipeData.nutritionValues,
+      imgDir: recipeData.imgDir,
+    };
 
     return this.apollo.mutate({
       mutation: GqlMutations.updateRecipeMutation,
       variables: {
         recipe,
+        recipeId: recipeData._id,
       },
       refetchQueries: [
         { query: GqlQueries.recipeListQuery },
         { query: GqlQueries.recipeEditListQuery },
-        { query: GqlQueries.recipeQuery, variables: { recipeId: recipe._id } },
+        {
+          query: GqlQueries.recipeQuery,
+          variables: { recipeId: recipeData._id },
+        },
       ],
     });
   }
@@ -72,7 +74,7 @@ export class GraphqlService {
           { query: GqlQueries.recipeListQuery },
         ],
       })
-      .pipe(map(result => result.data.add));
+      .pipe(map(result => result.data.approve));
   }
 
   rejectRecipe(id: string): Observable<any> {
@@ -129,15 +131,9 @@ export class GraphqlService {
       .valueChanges.pipe(map(result => result.data.recipe));
   }
 
-  updateUsers(users: IUser[]): Observable<any> {
-    const editUserData = [];
-    for (const user of users) {
-      editUserData.push({
-        _id: user._id,
-        isAdmin: user.isAdmin,
-      });
-    }
-
+  updateUsers(
+    editUserData: { userId: string; isAdmin: boolean }[]
+  ): Observable<any> {
     return this.apollo.mutate({
       mutation: GqlMutations.updateUsersMutation,
       variables: {
@@ -150,7 +146,7 @@ export class GraphqlService {
   getUserData(): Observable<IUser> {
     return this.apollo
       .watchQuery<any>({ query: GqlQueries.getUserDataQuery })
-      .valueChanges.pipe(map(result => result.data.getUserData));
+      .valueChanges.pipe(map(result => result.data.me));
   }
 
   getUserList(): Observable<IApolloResponse> {
@@ -180,26 +176,21 @@ export class GraphqlService {
       .valueChanges.pipe(map(result => result.data.unapprovedRecipe));
   }
 
-  rateRecipe(
-    id: string,
-    ratersKeys: string[],
-    ratersValues: number[]
-  ): Observable<any> {
+  rateRecipe(recipeId: string, value: number): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: GqlMutations.rateMutation,
       refetchQueries: [
         { query: GqlQueries.recipeListQuery },
-        { query: GqlQueries.recipeQuery, variables: { recipeId: id } },
+        { query: GqlQueries.recipeQuery, variables: { recipeId } },
       ],
       variables: {
-        recipeId: id,
-        ratersKeys,
-        ratersValues,
+        recipeId,
+        value,
       },
     });
   }
 
-  favoriteRecipe(id: string, favoriters: string[]): Observable<any> {
+  favoriteRecipe(id: string): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: GqlMutations.favoriteMutation,
       refetchQueries: [
@@ -208,12 +199,11 @@ export class GraphqlService {
       ],
       variables: {
         recipeId: id,
-        favoriters,
       },
     });
   }
 
-  signIn(username: string, password: string): Observable<any> {
+  login(username: string, password: string): Observable<any> {
     return this.apollo
       .mutate<any>({
         mutation: GqlMutations.signInMutation,

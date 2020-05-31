@@ -9,10 +9,7 @@ import { GraphqlService } from './graphql.service';
 @Injectable()
 // { providedIn: 'root' }
 export class RecipeApiService {
-  constructor(
-    private httpClient: HttpClient,
-    private graphQLService: GraphqlService
-  ) {}
+  constructor(private graphQLService: GraphqlService) {}
 
   getRecipeList(): Observable<any> {
     return this.graphQLService.getRecipeList();
@@ -30,7 +27,7 @@ export class RecipeApiService {
     return this.graphQLService.submitForApproval(recipe);
   }
 
-  addRecipe(recipe: IRecipe, approvalId: string): Observable<any> {
+  approveRecipe(recipe: IRecipe, approvalId: string): Observable<any> {
     return this.graphQLService.approveRecipe(approvalId, recipe);
   }
 
@@ -46,14 +43,12 @@ export class RecipeApiService {
     return this.graphQLService.rejectRecipe(recipeId);
   }
 
-  favoriteRecipe(recipe: IRecipe): Observable<any> {
-    return this.graphQLService.favoriteRecipe(recipe._id, recipe.favoriters);
+  favoriteRecipe(recipeId: string): Observable<any> {
+    return this.graphQLService.favoriteRecipe(recipeId);
   }
 
-  rateRecipe(recipe: IRecipe): Observable<any> {
-    const ratersKeys = Object.keys(recipe.raters).map(String);
-    const ratersValues = Object.values(recipe.raters).map(Number);
-    return this.graphQLService.rateRecipe(recipe._id, ratersKeys, ratersValues);
+  rateRecipe(recipeId: string, value: number): Observable<any> {
+    return this.graphQLService.rateRecipe(recipeId, value);
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
