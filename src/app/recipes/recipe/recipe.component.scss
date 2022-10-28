@@ -14,12 +14,10 @@
 }
 
 .favoritingIcon {
-  padding-left: 25px;
   padding-top: 7px;
 }
 
 .badge-hf {
-  // background-color: #5a9d3a !important;
   background-color: #0cd157 !important;
 }
 
@@ -35,26 +33,16 @@
   color: gold;
 }
 
-// .rating {
-  // unicode-bidi: bidi-override;
-  // direction: rtl;
-  // text-align: center;
-// }
-// .rating > span {
-  // display: inline-block;
-  // position: relative;
-  // width: 1.1em;
-// }
-// .rating > span:hover:before,
-// .rating > span:hover ~ span:before {
-   // content: "\2605";
-   // color: gold;
-   // position: absolute;
-// }
+.stars {
+  padding-top: 5px;
+  margin-left: -17px;
+}
 
-// .inRating {
-  // content: "\2605";
-  // left: 0;
-  // //color: gold;
-  // position: absolute;
-// }
+.stars-mobile {
+  margin-left: 0;
+}
+
+.favoritingIcon-mobile {
+  padding-top: 0px;
+  padding-bottom: 12px;
+}

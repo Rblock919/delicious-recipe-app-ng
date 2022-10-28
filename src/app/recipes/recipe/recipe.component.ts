@@ -5,6 +5,7 @@ import {
   Inject,
   EventEmitter,
   Output,
+  HostListener,
 } from '@angular/core';
 
 import { JQ_TOKEN } from '../../core/services/jQuery.service';
@@ -18,6 +19,8 @@ import { IRecipe } from 'src/app/models/recipe.model';
 export class RecipeComponent implements OnInit {
   private _userRating = 0;
   rated = false;
+  mobile = false;
+  screenWidth = 0;
 
   @Input()
   recipe: IRecipe;
@@ -62,25 +65,20 @@ export class RecipeComponent implements OnInit {
     let favoritersList: string[];
     favoritersList = this.recipe.favoriters;
     this.favorited = favoritersList.indexOf('' + this.userId) > -1;
-    // this.modalContentID = this.makeModalId(20);
-    // console.log('MODAL CONTENT ID: ' + this.modalContentID);
+    this.screenWidth = window.innerWidth;
+    this.isMobile();
+  }
 
-    // if (Object.keys(this.recipe.raters).length > 0) {
-    //
-    //   if (this.recipe.raters[this.userId]) {
-    //     this.rated = true;
-    //     this.userRating = this.recipe.raters[this.userId];
-    //   }
-    //
-    //   let ratingCounter = 0;
-    //   for (const value of Object.values(this.recipe.raters)) {
-    //     this.avgRating += Number(value);
-    //     ratingCounter++;
-    //   }
-    //
-    //   this.avgRating /= ratingCounter;
-    //
-    // }
+  isMobile() {
+    this.mobile = this.screenWidth < 768 ? true : false;
+    console.log(`is on mobile: ${this.mobile}`);
+  }
+
+  // TODO: probably a lot more performant to move this to the parent component
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.screenWidth = window.innerWidth;
+    this.isMobile();
   }
 
   makeModalId(length: number): string {
